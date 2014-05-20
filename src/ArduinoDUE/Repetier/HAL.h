@@ -186,7 +186,7 @@ typedef unsigned long ticks_t;
 typedef unsigned long millis_t;
 typedef int flag8_t;
 
-#define RFSERIAL Serial
+#define RFSERIAL SerialUSB
 
 #define OUT_P_I(p,i) //Com::printF(PSTR(p),(int)(i))
 #define OUT_P_I_LN(p,i) //Com::printFLN(PSTR(p),(int)(i))
@@ -220,7 +220,9 @@ public:
     // do any hardware-specific initialization here
     static inline void hwSetup(void)
     {
+#ifdef TWI_CLOCK_FREQ
         HAL::i2cInit(TWI_CLOCK_FREQ);
+#endif
 // make debugging startup easier
 //Serial.begin(115200);
         TimeTick_Configure(F_CPU_TRUE);
@@ -365,6 +367,7 @@ public:
     // Write any data type to EEPROM
     static inline void eprBurnValue(unsigned int pos, int size, union eeval_t newvalue) 
     {
+#if EEPROM_MODE!=0      
         i2cStartAddr(EEPROM_SERIAL_ADDR << 1 | I2C_WRITE, pos);        
         i2cWriting(newvalue.b[0]);        // write first byte
         for (int i=1;i<size;i++) {
@@ -382,6 +385,7 @@ public:
         }
         i2cStop();          // signal end of transaction
         delayMilliseconds(EEPROM_PAGE_WRITE_TIME);   // wait for page write to complete
+#endif
     }
 
     // Read any data type from EEPROM that was previously written by eprBurnValue
@@ -389,7 +393,7 @@ public:
     {
         int i;
         eeval_t v;
-
+#if EEPROM_MODE!=0
         size--;
         // set read location
         i2cStartAddr(EEPROM_SERIAL_ADDR << 1 | I2C_READ, pos);
@@ -401,6 +405,7 @@ public:
         }
         // read last byte 
         v.b[i] = i2cReadNak();
+#endif
         return v;
     }
 

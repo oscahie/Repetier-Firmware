@@ -530,6 +530,11 @@ void initializeLCD()
     uid.createChar(5,character_temperature);
     uid.createChar(6,character_folder);
     uid.createChar(7,character_ready);
+    
+#if defined(UI_BACKLIGHT_PIN)
+    SET_OUTPUT(UI_BACKLIGHT_PIN);
+    WRITE(UI_BACKLIGHT_PIN, HIGH);
+#endif
 }
 // ----------- end direct LCD driver
 #endif

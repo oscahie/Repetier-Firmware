@@ -325,7 +325,7 @@ STEPPER_CURRENT_CONTROL
 #define MISO_PIN        74
 #define SCK_PIN         76
 //#define DUE_SOFTWARE_SPI
-#else
+#elsif (SDSS == 53)
 #define DUE_SOFTWARE_SPI
 #define MOSI_PIN		51
 #define MISO_PIN		50

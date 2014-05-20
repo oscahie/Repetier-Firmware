@@ -341,6 +341,7 @@ void HAL::resetHardware() {
    }
 #endif
 
+#ifdef TWI_CLOCK_FREQ
 /*************************************************************************
  Initialization of the I2C bus interface. Need to be called only once
 *************************************************************************/
@@ -385,7 +386,6 @@ void HAL::i2cInit(unsigned long clockSpeedHz)
     TWI_INTERFACE->TWI_CWGR = 0;                                         
     TWI_INTERFACE->TWI_CWGR = (dwCkDiv << 16) | (dwClDiv << 8) | dwClDiv;
 }
-
 
 /*************************************************************************
   Issues a start condition and sends address and transfer direction.
@@ -545,7 +545,7 @@ unsigned char HAL::i2cReadNak(void)
     i2cCompleted();
     return data;
 }
-
+#endif
 
 // Wait for X microseconds 
 // this could be simpler but its used inside interrupts so must be reentrant
