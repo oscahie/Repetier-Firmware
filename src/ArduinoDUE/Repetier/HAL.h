@@ -368,6 +368,11 @@ public:
     static inline void eprBurnValue(unsigned int pos, int size, union eeval_t newvalue) 
     {
 #if EEPROM_MODE!=0      
+#ifdef SDEEPROM
+    	for (int i = 0; i < size; i++)
+    		HAL::sdEepromImage[pos++] = newvalue.b[i];
+    	HAL::sdEepromLastChanged = millis() | 1; // Make sure it's not zero.
+#else
         i2cStartAddr(EEPROM_SERIAL_ADDR << 1 | I2C_WRITE, pos);        
         i2cWriting(newvalue.b[0]);        // write first byte
         for (int i=1;i<size;i++) {
@@ -386,6 +391,7 @@ public:
         i2cStop();          // signal end of transaction
         delayMilliseconds(EEPROM_PAGE_WRITE_TIME);   // wait for page write to complete
 #endif
+#endif
     }
 
     // Read any data type from EEPROM that was previously written by eprBurnValue
@@ -394,6 +400,10 @@ public:
         int i;
         eeval_t v;
 #if EEPROM_MODE!=0
+#ifdef SDEEPROM
+    	for (int i = 0; i < size; i++)
+    		v.b[i] = HAL::sdEepromImage[pos++];
+#else
         size--;
         // set read location
         i2cStartAddr(EEPROM_SERIAL_ADDR << 1 | I2C_READ, pos);
@@ -405,6 +415,7 @@ public:
         }
         // read last byte 
         v.b[i] = i2cReadNak();
+#endif
 #endif
         return v;
     }
@@ -592,7 +603,14 @@ public:
 #endif
     static void microsecondsWait(uint32_t us);
     static volatile uint8_t insideTimer1;
-        
+
+#ifdef SDEEPROM
+    static void setupSdEeprom();
+    static bool syncSdEeprom();
+    static char sdEepromImage[];
+    static uint32_t sdEepromLastChanged; // millis
+#endif
+
 protected:
 };
 

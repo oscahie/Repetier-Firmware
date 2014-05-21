@@ -60,6 +60,7 @@ void SDCard::automount()
             Com::printFLN(PSTR("SD card inserted"));
             Printer::setMenuMode(MENU_MODE_SD_MOUNTED,true);
             initsd();
+            autoPrint();
 #if UI_DISPLAY_TYPE!=0
             if(sdactive) {
                 Printer::setAutomount(true);
@@ -88,19 +89,54 @@ void SDCard::initsd()
     }
     sdactive = true;
     Printer::setMenuMode(MENU_MODE_SD_MOUNTED,true);
+	fat.chdir();
+#ifdef SDEEPROM
+	if (eepromBuffer != NULL && eepromSize > 0)
+	{
+		if (eepromFile.isOpen())
+			eepromFile.close();
+		if (!eepromFile.open(SD_EEPROM_FILENAME, O_RDWR | O_CREAT | O_SYNC) ||
+			eepromFile.read(eepromBuffer, eepromSize) != eepromSize)
+		{
+			Com::printFLN(Com::tOpenFailedFile, SD_EEPROM_FILENAME);
+		}
 
-    fat.chdir();
+	}
+#endif
+#endif
+}
+
+#ifdef SDEEPROM
+bool SDCard::syncEeprom() {
+	if (!sdactive)
+	{
+		if (eepromFile.isOpen())
+			eepromFile.close();
+		return 0;
+	}
+
+	if (!eepromFile.seekSet(0))
+		return 0;
+
+	return eepromFile.write(eepromBuffer, eepromSize) == eepromSize;
+}
+#endif
+
+void SDCard::autoPrint() {
+	if (!sdactive)
+		return;
+
     if(selectFile("init.g",true))
     {
         startPrint();
     }
-#endif
 }
 
 void SDCard::mount()
 {
     sdmode = false;
     initsd();
+    autoPrint();
 }
 
 void SDCard::unmount()

@@ -259,7 +259,7 @@
 #define ACK_WITH_LINENUMBER
 #define WAITING_IDENTIFIER "wait"
 #define ECHO_ON_EXECUTE
-#define EEPROM_MODE 0
+#define EEPROM_MODE 1
 
 /* ======== Servos =======
 Control the servos with
@@ -361,7 +361,7 @@ Values must be in range 1..255
     "zStepsPerMM": 2600,
     "xInvert": "1",
     "xInvertEnable": "0",
-    "eepromMode": 0,
+    "eepromMode": 1,
     "yInvert": "0",
     "yInvertEnable": "0",
     "zInvert": "1",

@@ -792,6 +792,12 @@ void Printer::setup()
     UI_INITIALIZE;
     HAL::showStartReason();
     Extruder::initExtruder();
+#if SDSUPPORT
+#ifdef SDEEPROM
+    HAL::setupSdEeprom();
+#endif
+    sd.initsd();
+#endif
     EEPROM::init(); // Read settings from eeprom if wanted
     updateDerivedParameter();
     Commands::checkFreeMemory();
@@ -806,7 +812,7 @@ void Printer::setup()
 #endif // DRIVE_SYSTEM
     Extruder::selectExtruderById(0);
 #if SDSUPPORT
-    sd.initsd();
+    sd.autoPrint();
 #endif
 #if FEATURE_WATCHDOG
     HAL::startWatchdog();
@@ -832,6 +838,12 @@ void Printer::defaultLoopActions()
     }
 #if defined(SDCARDDETECT) && SDCARDDETECT>-1 && defined(SDSUPPORT) && SDSUPPORT
     sd.automount();
+#endif
+#if defined(SDEEPROM)
+    if (!HAL::syncSdEeprom())
+    {
+        Com::printFLN(PSTR("SD EEPROM write error"));
+    }
 #endif
     DEBUG_MEMORY;
 }

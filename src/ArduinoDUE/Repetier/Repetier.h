@@ -426,8 +426,21 @@ public:
   bool savetosd;
   SdBaseFile parentFound;
 
+#ifdef SDEEPROM
+#define SD_EEPROM_FILENAME "eeprom.bin"
+  char * eepromBuffer;
+  uint32_t eepromSize;
+  SdFile eepromFile;
+  inline void setupEeprom(char * buffer, uint32_t size) {
+	  eepromBuffer = buffer;
+	  eepromSize = size;
+  };
+  bool syncEeprom();
+#endif
+
   SDCard();
   void initsd();
+  void autoPrint();
   void writeCommand(GCode *code);
   bool selectFile(char *filename,bool silent=false);
   void mount();

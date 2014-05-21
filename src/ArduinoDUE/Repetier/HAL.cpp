@@ -47,8 +47,34 @@ HAL::~HAL()
     //dtor
 }
 
+#ifdef SDEEPROM
+#if !SDSUPPORT
+#error SDEEPROM requires SDCARSUPPORT
+#endif
+#if EEPROM_MODE == 0
+#error SDEEPROM requires EEPROM_MODE != 0
+#endif
 
+#define SDEEPROM_SIZE 2048 // Minimum size used by Eeprom.cpp
 
+char HAL::sdEepromImage[SDEEPROM_SIZE] = { 0, };
+uint32_t HAL::sdEepromLastChanged = 0; // 0 = never.
+
+void HAL::setupSdEeprom() {
+	sd.setupEeprom(sdEepromImage, SDEEPROM_SIZE);
+}
+
+bool HAL::syncSdEeprom() {
+	uint32_t time = millis();
+
+	if (sdEepromLastChanged && (time - sdEepromLastChanged > 3000)) // Buffer writes for 3 seconds
+	{
+		sdEepromLastChanged = 0;
+		return sd.syncEeprom();
+	}
+	return true;
+}
+#endif
 
 // Set up all timer interrupts 
 void HAL::setupTimer() {
