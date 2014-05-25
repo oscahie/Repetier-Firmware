@@ -694,7 +694,16 @@ void Commands::executeGCode(GCode *com)
                          Printer::autolevelTransformation[1]*Printer::autolevelTransformation[5])*
                         (float)Printer::currentPositionSteps[X_AXIS]*Printer::invAxisStepsPerMM[X_AXIS])/
                       (Printer::autolevelTransformation[1]*Printer::autolevelTransformation[3]-Printer::autolevelTransformation[0]*Printer::autolevelTransformation[4]);
+#ifdef ZPROBE_ADJUST_ZMIN
+            Com::printFLN("Old zMin:", Printer::zMin);
+            Com::printFLN("Z : ", z);
+            Com::printFLN("h3 : ", h3);
+            Com::printFLN("bed : ", (float)EEPROM::zProbeBedDistance());
+            Printer::zMin = z + h3 - EEPROM::zProbeBedDistance();
+            Com::printFLN("New zMin:", Printer::zMin);
+#else
             Printer::zMin = 0;
+#endif
             if(com->hasS() && com->S)
             {
 #if MAX_HARDWARE_ENDSTOP_Z
