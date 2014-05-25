@@ -98,8 +98,8 @@
 #define SCALE_PID_TO_MAX 0
 #define TEMP_HYSTERESIS 0
 #define EXTRUDE_MAXLENGTH 160
-#define NUM_TEMPS_USERTHERMISTOR0 29
-#define USER_THERMISTORTABLE0 {{26,2400},{30,2320},{39,2240},{49,2160},{59,2080},{73,2000},{89,1920},{111,1840},{132,1760},{165,1680},{201,1600},{248,1520},{309,1440},{389,1360},{485,1280},{596,1200},{714,1120},{894,1040},{1083,960},{1312,880},{1539,800},{1786,720},{2006,640},{2208,560},{2382,480},{2503,400},{2602,320},{2679,240},{2729,160}}
+#define NUM_TEMPS_USERTHERMISTOR0 22
+#define USER_THERMISTORTABLE0 {{111,2240},{132,2120},{165,2000},{201,1920},{248,1800},{309,1720},{389,1640},{485,1560},{596,1440},{714,1360},{894,1280},{1083,1160},{1312,1080},{1539,960},{1786,880},{2006,760},{2208,640},{2382,560},{2503,440},{2602,360},{2679,264},{2729,160}}
 #define NUM_TEMPS_USERTHERMISTOR1 23
 #define USER_THERMISTORTABLE1 {{2003,1040},{2058,1000},{2161,960},{2253,920},{2337,880},{2450,840},{2549,800},{2637,760},{2715,720},{2786,680},{2907,640},{3008,600},{3093,560},{3165,520},{3247,480},{3316,440},{3374,400},{3447,360},{3506,320},{3548,280},{3610,240},{3664,200},{3708,160}}
 #define NUM_TEMPS_USERTHERMISTOR2 0
@@ -213,7 +213,7 @@
 #define HOMING_FEEDRATE_Y 40
 #define HOMING_FEEDRATE_Z 4
 #define HOMING_ORDER HOME_ORDER_XYZ
-#define ENABLE_BACKLASH_COMPENSATION 0
+#define ENABLE_BACKLASH_COMPENSATION 1
 #define X_BACKLASH 0
 #define Y_BACKLASH 0
 #define Z_BACKLASH 0
@@ -231,7 +231,7 @@
 #define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Z 100
 #define MAX_JERK 20
 #define MAX_ZJERK 0.3
-#define MOVE_CACHE_SIZE 64
+#define MOVE_CACHE_SIZE 32
 #define MOVE_CACHE_LOW 10
 #define LOW_TICKS_PER_MOVE 250000
 #define FEATURE_TWO_XSTEPPER 0
@@ -247,6 +247,8 @@
 #define Z2_DIR_PIN    ORIG_E1_DIR_PIN
 #define Z2_ENABLE_PIN ORIG_E1_ENABLE_PIN
 #define FEATURE_DITTO_PRINTING 0
+#define USE_ADVANCE
+#define ENABLE_QUADRATIC_ADVANCE
 
 
 // ################# Misc. settings ##################
@@ -276,28 +278,28 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 
 // #################### Z-Probing #####################
 
-#define FEATURE_Z_PROBE 0
+#define FEATURE_Z_PROBE 1
 #define Z_PROBE_BED_DISTANCE 10
-#define Z_PROBE_PIN -1
-#define Z_PROBE_PULLUP 0
+#define Z_PROBE_PIN 5
+#define Z_PROBE_PULLUP 1
 #define Z_PROBE_ON_HIGH 0
 #define Z_PROBE_X_OFFSET 0
 #define Z_PROBE_Y_OFFSET 0
 #define Z_PROBE_WAIT_BEFORE_TEST 0
-#define Z_PROBE_SPEED 2
+#define Z_PROBE_SPEED 1
 #define Z_PROBE_XY_SPEED 150
 #define Z_PROBE_SWITCHING_DISTANCE 1
 #define Z_PROBE_REPETITIONS 1
-#define Z_PROBE_HEIGHT 40
+#define Z_PROBE_HEIGHT 0.28
 #define Z_PROBE_START_SCRIPT ""
 #define Z_PROBE_FINISHED_SCRIPT ""
 #define FEATURE_AUTOLEVEL 1
-#define Z_PROBE_X1 20
-#define Z_PROBE_Y1 20
-#define Z_PROBE_X2 160
-#define Z_PROBE_Y2 20
-#define Z_PROBE_X3 100
-#define Z_PROBE_Y3 160
+#define Z_PROBE_X1 25
+#define Z_PROBE_Y1 6
+#define Z_PROBE_X2 25
+#define Z_PROBE_Y2 215
+#define Z_PROBE_X3 211
+#define Z_PROBE_Y3 215
 
 #ifndef SDSUPPORT  // Some boards have sd support on board. These define the values already in pins.h
 #define SDSUPPORT 1
@@ -448,7 +450,7 @@ Values must be in range 1..255
         "dir": "ORIG_Z_DIR_PIN",
         "enable": "ORIG_Z_ENABLE_PIN"
     },
-    "enableBacklash": "0",
+    "enableBacklash": "1",
     "backlashX": 0,
     "backlashY": 0,
     "backlashZ": 0,
@@ -496,7 +498,7 @@ Values must be in range 1..255
     "maxHalfstepInterval": 4000,
     "maxJerk": 20,
     "maxZJerk": 0.3,
-    "moveCacheSize": 64,
+    "moveCacheSize": 32,
     "moveCacheLow": 10,
     "lowTicksPerMove": 250000,
     "enablePowerOnStartup": "1",
@@ -504,8 +506,8 @@ Values must be in range 1..255
     "sendWaits": "1",
     "ackWithLineNumber": "1",
     "killMethod": 1,
-    "useAdvance": "0",
-    "useQuadraticAdvance": "0",
+    "useAdvance": "1",
+    "useQuadraticAdvance": "1",
     "powerInverting": 0,
     "mirrorX": 0,
     "mirrorXMotor": {
@@ -536,7 +538,7 @@ Values must be in range 1..255
     "servo3Pin": -1,
     "featureWatchdog": "0",
     "hasHeatedBed": "1",
-    "enableZProbing": "0",
+    "enableZProbing": "1",
     "extrudeMaxLength": 160,
     "homeOrder": "HOME_ORDER_XYZ",
     "featureController": 1,
@@ -605,142 +607,107 @@ Values must be in range 1..255
         "r2": 4700,
         "temps": [
             {
-                "t": 300,
-                "r": 30,
-                "adc": 25.972515856237
-            },
-            {
-                "t": 290,
-                "r": 35,
-                "adc": 30.269271383316
-            },
-            {
                 "t": 280,
-                "r": 45,
-                "adc": 38.835616438356
-            },
-            {
-                "t": 270,
-                "r": 57,
-                "adc": 49.067689720412
-            },
-            {
-                "t": 260,
-                "r": 69,
-                "adc": 59.248270077584
-            },
-            {
-                "t": 250,
-                "r": 85,
-                "adc": 72.742946708464
-            },
-            {
-                "t": 240,
-                "r": 105,
-                "adc": 89.484911550468
-            },
-            {
-                "t": 230,
                 "r": 131,
                 "adc": 111.04222728214
             },
             {
-                "t": 220,
+                "t": 265,
                 "r": 157,
                 "adc": 132.36874613959
             },
             {
-                "t": 210,
+                "t": 250,
                 "r": 197,
                 "adc": 164.73657341229
             },
             {
-                "t": 200,
+                "t": 240,
                 "r": 243,
                 "adc": 201.31195630184
             },
             {
-                "t": 190,
+                "t": 225,
                 "r": 303,
                 "adc": 248.00819508295
             },
             {
-                "t": 180,
+                "t": 215,
                 "r": 384,
                 "adc": 309.29976396538
             },
             {
-                "t": 170,
+                "t": 205,
                 "r": 493,
                 "adc": 388.76083188908
             },
             {
-                "t": 160,
+                "t": 195,
                 "r": 632,
                 "adc": 485.37884471118
             },
             {
-                "t": 150,
+                "t": 180,
                 "r": 801,
                 "adc": 596.27249590983
             },
             {
-                "t": 140,
+                "t": 170,
                 "r": 993,
                 "adc": 714.26927806078
             },
             {
-                "t": 130,
+                "t": 160,
                 "r": 1312,
                 "adc": 893.65269461078
             },
             {
-                "t": 120,
+                "t": 145,
                 "r": 1691,
                 "adc": 1083.4994523549
             },
             {
-                "t": 110,
+                "t": 135,
                 "r": 2215,
                 "adc": 1311.7028199566
             },
             {
-                "t": 100,
+                "t": 120,
                 "r": 2831,
                 "adc": 1539.3632983668
             },
             {
-                "t": 90,
+                "t": 110,
                 "r": 3636,
                 "adc": 1786.1588291747
             },
             {
-                "t": 80,
+                "t": 95,
                 "r": 4515,
                 "adc": 2006.3944655453
             },
             {
-                "t": 70,
+                "t": 80,
                 "r": 5500,
                 "adc": 2208.0882352941
             },
             {
-                "t": 60,
+                "t": 70,
                 "r": 6536,
                 "adc": 2382.0683517266
             },
             {
-                "t": 50,
+                "t": 55,
                 "r": 7391,
                 "adc": 2503.1961789761
             },
             {
-                "t": 40,
+                "t": 45,
                 "r": 8193,
                 "adc": 2602.2132164741
             },
             {
-                "t": 30,
+                "t": 33,
                 "r": 8892,
                 "adc": 2678.9832254267
             },
@@ -750,7 +717,7 @@ Values must be in range 1..255
                 "adc": 2728.6433338066
             }
         ],
-        "numEntries": 29
+        "numEntries": 22
     },
     "userTable1": {
         "r1": 0,
@@ -896,25 +863,25 @@ Values must be in range 1..255
     "featureFanControl": "0",
     "fanPin": -1,
     "scalePidToMax": 0,
-    "zProbePin": -1,
+    "zProbePin": 5,
     "zProbeBedDistance": 10,
-    "zProbePullup": "0",
+    "zProbePullup": "1",
     "zProbeOnHigh": "0",
     "zProbeXOffset": 0,
     "zProbeYOffset": 0,
     "zProbeWaitBeforeTest": "0",
-    "zProbeSpeed": 2,
+    "zProbeSpeed": 1,
     "zProbeXYSpeed": 150,
-    "zProbeHeight": 40,
+    "zProbeHeight": 0.28,
     "zProbeStartScript": "",
     "zProbeFinishedScript": "",
     "featureAutolevel": "1",
-    "zProbeX1": 20,
-    "zProbeY1": 20,
-    "zProbeX2": 160,
-    "zProbeY2": 20,
-    "zProbeX3": 100,
-    "zProbeY3": 160,
+    "zProbeX1": 25,
+    "zProbeY1": 6,
+    "zProbeX2": 25,
+    "zProbeY2": 215,
+    "zProbeX3": 211,
+    "zProbeY3": 215,
     "zProbeSwitchingDistance": 1,
     "zProbeRepetitions": 1,
     "sdSupport": "1",
