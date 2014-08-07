@@ -59,7 +59,7 @@
 #define DRIVE_SYSTEM 0
 #define XAXIS_STEPS_PER_MM 80
 #define YAXIS_STEPS_PER_MM 80
-#define ZAXIS_STEPS_PER_MM 2600
+#define ZAXIS_STEPS_PER_MM 2560
 #define EXTRUDER_FAN_COOL_TEMP 50
 #define EXT0_X_OFFSET 0
 #define EXT0_Y_OFFSET 0
@@ -183,9 +183,9 @@
 #define X_HOME_DIR -1
 #define Y_HOME_DIR -1
 #define Z_HOME_DIR -1
-#define X_MAX_LENGTH 240
-#define Y_MAX_LENGTH 215
-#define Z_MAX_LENGTH 200
+#define X_MAX_LENGTH 235
+#define Y_MAX_LENGTH 217
+#define Z_MAX_LENGTH 202
 #define X_MIN_POS 0
 #define Y_MIN_POS 0
 #define Z_MIN_POS 0
@@ -259,7 +259,7 @@
 #define KILL_METHOD 1
 #define GCODE_BUFFER_SIZE 2
 #define ACK_WITH_LINENUMBER
-#define WAITING_IDENTIFIER "wait"
+#define WAITING_IDENTIFIER "Wait"
 #define ECHO_ON_EXECUTE
 #define EEPROM_MODE 1
 
@@ -329,7 +329,7 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define FEATURE_BEEPER 1
 #define CASE_LIGHTS_PIN 85
 #define CASE_LIGHT_DEFAULT_ON 1
-#define UI_START_SCREEN_DELAY 1000
+#define UI_START_SCREEN_DELAY 2000
 /**
 Beeper sound definitions for short beeps during key actions
 and longer beeps for important actions.
@@ -338,10 +338,10 @@ Values must be in range 1..255
 */
 #define BEEPER_SHORT_SEQUENCE 2,2
 #define BEEPER_LONG_SEQUENCE 8,8
-#define UI_SET_PRESET_HEATED_BED_TEMP_PLA 60
-#define UI_SET_PRESET_EXTRUDER_TEMP_PLA   170
+#define UI_SET_PRESET_HEATED_BED_TEMP_PLA 55
+#define UI_SET_PRESET_EXTRUDER_TEMP_PLA   180
 #define UI_SET_PRESET_HEATED_BED_TEMP_ABS 90
-#define UI_SET_PRESET_EXTRUDER_TEMP_ABS   210
+#define UI_SET_PRESET_EXTRUDER_TEMP_ABS   220
 #define UI_SET_MIN_HEATED_BED_TEMP  30
 #define UI_SET_MAX_HEATED_BED_TEMP 120
 #define UI_SET_MIN_EXTRUDER_TEMP   170
