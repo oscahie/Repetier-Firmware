@@ -341,6 +341,7 @@ void Extruder::selectExtruderById(uint8_t extruderId)
         GCode::executeFString(Extruder::current->deselectCommands);
         executeSelect = true;
     }
+    Commands::waitUntilEndOfAllMoves();
 #endif
     Extruder::current->extrudePosition = Printer::currentPositionSteps[E_AXIS];
     Extruder::current = &extruder[extruderId];
@@ -411,6 +412,22 @@ void Extruder::setTemperatureForExtruder(float temperatureInCelsius,uint8_t extr
         TemperatureController *tc2 = tempController[1];
         tc2->setTargetTemperature(temperatureInCelsius);
         if(temperatureInCelsius>=EXTRUDER_FAN_COOL_TEMP) extruder[1].coolerPWM = extruder[1].coolerSpeed;
+#if NUM_EXTRUDER > 2
+        if(Extruder::dittoMode > 1 && extr == 0)
+        {
+            TemperatureController *tc2 = tempController[2];
+            tc2->setTargetTemperature(temperatureInCelsius);
+            if(temperatureInCelsius>=EXTRUDER_FAN_COOL_TEMP) extruder[2].coolerPWM = extruder[2].coolerSpeed;
+        }
+#endif
+#if NUM_EXTRUDER > 3
+        if(Extruder::dittoMode > 2 && extr == 0)
+        {
+            TemperatureController *tc2 = tempController[3];
+            tc2->setTargetTemperature(temperatureInCelsius);
+            if(temperatureInCelsius>=EXTRUDER_FAN_COOL_TEMP) extruder[3].coolerPWM = extruder[3].coolerSpeed;
+        }
+#endif
     }
 #endif // FEATURE_DITTO_PRINTING
     bool alloff = true;
@@ -455,6 +472,14 @@ void Extruder::disableCurrentExtruderMotor()
     {
         if(extruder[1].enablePin > -1)
             digitalWrite(extruder[1].enablePin,!extruder[1].enableOn);
+#if NUM_EXTRUDER > 2
+        if(Extruder::dittoMode > 1 && extruder[2].enablePin > -1)
+            digitalWrite(extruder[2].enablePin,!extruder[2].enableOn);
+#endif
+#if NUM_EXTRUDER > 3
+        if(Extruder::dittoMode > 2 && extruder[3].enablePin > -1)
+            digitalWrite(extruder[3].enablePin,!extruder[3].enableOn);
+#endif
     }
 #endif
 }
@@ -1304,4 +1329,3 @@ TemperatureController *tempController[NUM_TEMPERATURE_LOOPS] =
 #endif
 #endif
 };
-

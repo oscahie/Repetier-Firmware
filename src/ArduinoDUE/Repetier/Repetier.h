@@ -369,8 +369,8 @@ extern void linear_move(long steps_remaining[]);
 #ifndef FEATURE_DITTO_PRINTING
 #define FEATURE_DITTO_PRINTING false
 #endif
-#if FEATURE_DITTO_PRINTING && NUM_EXTRUDER!=2
-#error Ditto printing requires exactly 2 extruder.
+#if FEATURE_DITTO_PRINTING && (NUM_EXTRUDER > 4 || NUM_EXTRUDER < 2)
+#error Ditto printing requires 2 - 4 extruder.
 #endif
 
 
@@ -425,7 +425,7 @@ public:
   //int16_t n;
   bool savetosd;
   SdBaseFile parentFound;
-
+  
 #ifdef SDEEPROM
 #define SD_EEPROM_FILENAME "eeprom.bin"
   char * eepromBuffer;
