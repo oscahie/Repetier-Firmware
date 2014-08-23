@@ -127,7 +127,7 @@
 #define MIN_EXTRUDER_TEMP 150
 #define MAXTEMP 240
 #define MIN_DEFECT_TEMPERATURE -10
-#define MAX_DEFECT_TEMPERATURE 290
+#define MAX_DEFECT_TEMPERATURE 260
 
 // ################ Endstop configuration #####################
 
@@ -287,19 +287,19 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define Z_PROBE_Y_OFFSET 0
 #define Z_PROBE_WAIT_BEFORE_TEST 0
 #define Z_PROBE_SPEED 1
-#define Z_PROBE_XY_SPEED 150
+#define Z_PROBE_XY_SPEED 100
 #define Z_PROBE_SWITCHING_DISTANCE 1
 #define Z_PROBE_REPETITIONS 1
-#define Z_PROBE_HEIGHT 0.28
+#define Z_PROBE_HEIGHT 0.3
 #define Z_PROBE_START_SCRIPT ""
 #define Z_PROBE_FINISHED_SCRIPT ""
 #define FEATURE_AUTOLEVEL 1
 #define Z_PROBE_X1 25
 #define Z_PROBE_Y1 6
 #define Z_PROBE_X2 25
-#define Z_PROBE_Y2 215
+#define Z_PROBE_Y2 216
 #define Z_PROBE_X3 211
-#define Z_PROBE_Y3 215
+#define Z_PROBE_Y3 216
 
 #ifndef SDSUPPORT  // Some boards have sd support on board. These define the values already in pins.h
 #define SDSUPPORT 1
@@ -312,9 +312,9 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define FEATURE_CHECKSUM_FORCED 0
 #define FEATURE_FAN_CONTROL 0
 #define FEATURE_CONTROLLER 1
-#define UI_LANGUAGE 0
-#define UI_PRINTER_NAME "Da Vinci 1.0"
-#define UI_PRINTER_COMPANY "XYZ Printing"
+#define UI_LANGUAGE 7
+#define UI_PRINTER_NAME    "  Da Vinci 1.0"
+#define UI_PRINTER_COMPANY "  XYZ Printing"
 #define UI_PAGES_DURATION 4000
 #define UI_ANIMATION 0
 #define UI_SPEEDDEPENDENT_POSITIONING 0

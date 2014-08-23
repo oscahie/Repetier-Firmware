@@ -154,10 +154,11 @@ public:
     static float memoryY;
     static float memoryZ;
     static float memoryE;
+    static float memoryF;
 #endif
 #ifdef XY_GANTRY
-    static char motorX;
-    static char motorY;
+    static int8_t motorX;
+    static int8_t motorY;
 #endif
 #ifdef DEBUG_SEGMENT_LENGTH
     static float maxRealSegmentLength;

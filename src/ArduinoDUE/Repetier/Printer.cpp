@@ -139,10 +139,11 @@ float Printer::memoryX;
 float Printer::memoryY;
 float Printer::memoryZ;
 float Printer::memoryE;
+float Printer::memoryF;
 #endif
 #ifdef XY_GANTRY
-char Printer::motorX;
-char Printer::motorY;
+int8_t Printer::motorX;
+int8_t Printer::motorY;
 #endif
 #ifdef DEBUG_SEGMENT_LENGTH
     float Printer::maxRealSegmentLength = 0;
@@ -854,18 +855,18 @@ void Printer::MemoryPosition()
     updateCurrentPosition(false);
     realPosition(memoryX,memoryY,memoryZ);
     memoryE = currentPositionSteps[E_AXIS]*axisStepsPerMM[E_AXIS];
+    memoryF = feedrate;
 }
 
 void Printer::GoToMemoryPosition(bool x,bool y,bool z,bool e,float feed)
 {
     bool all = !(x || y || z);
-    float oldFeedrate = feedrate;
     moveToReal((all || x ? memoryX : IGNORE_COORDINATE)
                ,(all || y ? memoryY : IGNORE_COORDINATE)
                ,(all || z ? memoryZ : IGNORE_COORDINATE)
                ,(e ? memoryE:IGNORE_COORDINATE),
                feed);
-    feedrate = oldFeedrate;
+    feedrate = memoryF;
 }
 #endif
 

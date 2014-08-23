@@ -141,12 +141,12 @@ for 2 row displays. You can add additional pages or change the default pages lik
    #if NUM_EXTRUDER>1
      "\xa %e1/%E1\xb0 Y:%x1",
   #else
-     "\xa -----/---\xb0 Y:%x1",
+     "           Y:%x1",
    #endif
    #if HAVE_HEATED_BED==true
      "\xe %eb/%Eb\xb0 Z:%x2",
    #else
-     "\xb -----/---\xb0 Z:%x2",
+     "Fan %Fs%%% Z:%x2",
    #endif
    "Mul:%om", "Buf:%oB", "%os");
 
@@ -168,7 +168,7 @@ for 2 row displays. You can add additional pages or change the default pages lik
 
 #elif UI_ROWS>=4
  #if HAVE_HEATED_BED==true
-   UI_PAGE4(ui_page1,"\005%ec/%Ec\002B%eB/%Eb\002","Z:%x2","Mul:%om Buf:%oB","%os");
+   UI_PAGE4(ui_page1,"\005%ec/%Ec\002Mul:%om","B%eB/%Eb\002Buf: %oB","Z:%x2","%os");
    //UI_PAGE4(ui_page1,UI_TEXT_PAGE_EXTRUDER,UI_TEXT_PAGE_BED,UI_TEXT_PAGE_BUFFER,"%os");
  #else
    UI_PAGE4(ui_page1,UI_TEXT_PAGE_EXTRUDER,"Z:%x2 mm",UI_TEXT_PAGE_BUFFER,"%os");

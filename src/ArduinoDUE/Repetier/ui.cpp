@@ -2562,6 +2562,7 @@ void UIDisplay::executeAction(int action)
             break;
 #if CASE_LIGHTS_PIN > 0
         case UI_ACTION_LIGHTS_ONOFF:
+            TOGGLE(UI_BACKLIGHT_PIN);
             TOGGLE(CASE_LIGHTS_PIN);
             UI_STATUS(UI_TEXT_LIGHTS_ONOFF);
             break;
