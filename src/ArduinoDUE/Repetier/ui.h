@@ -1136,7 +1136,7 @@ void ui_check_slow_keys(int &action) {}
 #include "uimenu.h"
 #endif
 
-#define UI_VERSION_STRING "Repetier " REPETIER_VERSION
+#define UI_VERSION_STRING "  Repetier " REPETIER_VERSION
 
 #ifdef UI_HAS_I2C_KEYS
 #define COMPILE_I2C_DRIVER
