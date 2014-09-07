@@ -284,7 +284,7 @@ public:
         delay(delayMs);
     }
     static inline void tone(uint8_t pin,int frequency) {
-        // set up timer counter 1 channel 0 to generate interrupts for
+// set up timer counter 1 channel 0 to generate interrupts for
         // toggling output pin.  
         SET_OUTPUT(pin);
         tone_pin = pin;

@@ -994,23 +994,12 @@ void EXTRUDER_TIMER_VECTOR ()
 
 // IRQ handler for tone generator
 void BEEPER_TIMER_VECTOR () {
-    static bool     toggle;
-
+    static bool toggle;
+    //Com::print(tone_pin);
     TC_GetStatus(BEEPER_TIMER, BEEPER_TIMER_CHANNEL);
 
-    WRITE(tone_pin, toggle);
+    //WRITE(tone_pin, toggle);
+    WRITE(BEEPER_PIN, toggle);
     toggle = !toggle;
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
