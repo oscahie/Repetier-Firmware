@@ -82,6 +82,27 @@
 // can overwrite the definition. That way new strings are at least in english
 // available.
 
+#if SIMPLE_MENU == 1
+// Added for Da Vinci 1.0
+#define UI_TEXT_EXTR_OFF                  "Turn Off"
+#define UI_TEXT_TEMP                      "Heater"
+#define UI_TEXT_MAINTENANCE               "Maintenance"
+#define UI_TEXT_LOAD                      "Load Filament"
+#define UI_TEXT_UNLOAD                    "Unload Filament"
+#define UI_TEXT_CLEAN_EXTR                "Clean Nozzle"
+#define UI_TEXT_CLEAN_DRIPTRAY            "Clean Driptray"
+#define UI_TEXT_EXTR_TEMP                 "Extr Temp:%E0\002C"
+#define UI_TEXT_ACTION_PREPARING          "Preparing","","Please Wait...",""
+#define UI_TEXT_ACTION_PREHEAT            "Heating Extruder","%ec/%Ec\002C","","Please Wait..."
+#define UI_TEXT_ACTION_CLEAN_EXTR         "Extruder Heated","","Ready for","     Cleaning"
+#define UI_TEXT_ACTION_CLEAN_DRIPTRAY     "Remove and Clean","Driptray","",""
+#define UI_TEXT_ACTION_LOAD               "INSERT FILAMENT","UNTIL REACH THE","OTHER END","[OK] TO NEXT"
+#define UI_TEXT_ACTION_LOAD_RUN           "FILAMENT IS","LOADING UP NOW","","PLEASE WAIT..."
+#define UI_TEXT_ACTION_LOAD_ASK           "CHECK FILAMENT","OUT FROM NOZZLE?","[BACK] TO RETRY","[OK] TO NEXT"
+#define UI_TEXT_ACTION_UNLOAD             "PULL FILAMENT","OUT AND PRESS","[OK] TO STOP","UNLOADING"
+#define UI_TEXT_POWER_SAVE    	          "Powersave:%Ps"
+#endif
+
 #define UI_TEXT_ON               "ON"
 #define UI_TEXT_OFF              "OFF"
 #define UI_TEXT_NA               "N/A" // Output for not available
@@ -1200,6 +1221,27 @@
 // *************** French translation ****************
 // ***************      By Doudou     ****************
 #if UI_LANGUAGE==7
+
+#if SIMPLE_MENU == 1
+// Added for Da Vinci 1.0
+#define UI_TEXT_EXTR_OFF                  "Arret"
+#define UI_TEXT_TEMP                      "Chauffage"
+#define UI_TEXT_MAINTENANCE               "Maintenance"
+#define UI_TEXT_LOAD                      "Charger Filament"
+#define UI_TEXT_UNLOAD                    "Decharg Filament"
+#define UI_TEXT_CLEAN_EXTR                "Nettoyer Buse"
+#define UI_TEXT_CLEAN_DRIPTRAY            "Nettoyer Reserv"
+#define UI_TEXT_EXTR_TEMP                 "Temp Extr:%E0\002C"
+#define UI_TEXT_ACTION_PREPARING          "Preparation","Veuillez","Patientez...",""
+#define UI_TEXT_ACTION_PREHEAT            "Chauff Extrudeuse","%ec/%Ec\002C","","Patientez..."
+#define UI_TEXT_ACTION_CLEAN_EXTR         "Extrudeuse chaude","Prete pour","Le Nettoyage","ATTENDRE"
+#define UI_TEXT_ACTION_CLEAN_DRIPTRAY     "Vous Pouvez","Enlenver Et","Nettoyer","Reservoir"
+#define UI_TEXT_ACTION_LOAD               "INSERER LE FIL","ET ATTENDRE QUE","LE FIL SORTE","[OK]CONTINUER"
+#define UI_TEXT_ACTION_LOAD_RUN           "LE FIL EST","MAINTENANT","CHARGE","ATTENDRE..."
+#define UI_TEXT_ACTION_LOAD_ASK           "VERIFIER QUE LE","FIL SOIT SORTI","[BACK]RECOMMENCER","[OK]CONTINUER"
+#define UI_TEXT_ACTION_UNLOAD             "TIRER LE FIL","ET PRESSEZ","[OK]POUR ARRETER","LE DECHARGEMENT"
+#define UI_TEXT_POWER_SAVE    	          "Mode Eco:%Ps"
+#endif
 
 #define UI_TEXT_ON               "ON"
 #define UI_TEXT_OFF              "OFF"

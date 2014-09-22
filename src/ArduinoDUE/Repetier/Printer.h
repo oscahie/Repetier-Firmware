@@ -393,6 +393,15 @@ public:
     {
         return (unitIsInches ? x*25.4 : x);
     }
+    
+    #if SIMPLE_MENU == 1
+    static inline bool isFilamentLoaded()
+    {
+      
+        return READ(FIL_SENSOR_PIN);
+    }
+#endif
+
     static inline bool isXMinEndstopHit()
     {
 #if X_MIN_PIN>-1 && MIN_HARDWARE_ENDSTOP_X
