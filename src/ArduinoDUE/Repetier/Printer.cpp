@@ -554,6 +554,12 @@ void Printer::setup()
 #endif
 #endif
 
+    //Initialize Additional Pins
+#if SIMPLE_MENU == 1
+    SET_INPUT(FIL_SENSOR_PIN);
+    //PULLUP(FIL_SENSOR_PIN,HIGH)
+#endif
+
     //Initialize Step Pins
     SET_OUTPUT(X_STEP_PIN);
     SET_OUTPUT(Y_STEP_PIN);

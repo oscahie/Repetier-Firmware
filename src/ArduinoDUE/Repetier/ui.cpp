@@ -25,7 +25,10 @@ extern const int8_t encoder_table[16] PROGMEM ;
 #include <ctype.h>
 
 
-
+#if SIMPLE_MENU == 1
+byte wait_mode = 0;    // 0 = Disabled, 1 = Clean Extruder, 2,3,4 = Load Filament, 5 = Unload Filament
+bool disable_buttons = false;
+#endif
 
 #if BEEPER_TYPE==2 && defined(UI_HAS_I2C_KEYS) && UI_I2C_KEY_ADDRESS!=BEEPER_ADDRESS
 #error Beeper address and i2c key address must be identical
@@ -2482,25 +2485,55 @@ void UIDisplay::executeAction(int action)
         switch(action)
         {
         case UI_ACTION_OK:
+#if SIMPLE_MENU == 1
+  if(!disable_buttons) {
+#endif
             okAction();
             skipBeep=true; // Prevent double beep
+#if SIMPLE_MENU == 1
+  }
+#endif
             break;
         case UI_ACTION_BACK:
+#if SIMPLE_MENU == 1
+  if(!disable_buttons) {
+#endif
             if(menuLevel>0) menuLevel--;
             Printer::setAutomount(false);
             activeAction = 0;
+#if SIMPLE_MENU == 1
+  }
+#endif
             break;
         case UI_ACTION_NEXT:
+#if SIMPLE_MENU == 1
+  if(!disable_buttons) {
+#endif
             nextPreviousAction(1);
+#if SIMPLE_MENU == 1
+  }
+#endif
             break;
         case UI_ACTION_PREVIOUS:
+#if SIMPLE_MENU == 1
+  if(!disable_buttons) {
+#endif
             nextPreviousAction(-1);
+#if SIMPLE_MENU == 1
+  }
+#endif
             break;
         case UI_ACTION_MENU_UP:
             if(menuLevel>0) menuLevel--;
             break;
         case UI_ACTION_TOP_MENU:
+#if SIMPLE_MENU == 1
+  if(!disable_buttons) {
+#endif
             menuLevel = 0;
+#if SIMPLE_MENU == 1
+  }
+#endif
             break;
         case UI_ACTION_EMERGENCY_STOP:
             Commands::emergencyStop();
@@ -2580,6 +2613,74 @@ void UIDisplay::executeAction(int action)
             Extruder::setHeatedBedTemperature(UI_SET_PRESET_HEATED_BED_TEMP_PLA);
 #endif
             break;
+
+#if SIMPLE_MENU == 1
+        case UI_ACTION_CLEAN_EXTR:
+            wait_mode = 1;
+            disable_buttons = true;
+            Extruder::setTemperatureForExtruder(UI_SET_PRESET_EXTRUDER_TEMP_ABS+10,0);
+            pushMenu((void*)&ui_menu_preheat,false);
+            Printer::homeAxis(true,true,true);
+            Commands::printCurrentPosition();
+            UI_STATUS(UI_TEXT_HEATING_EXTRUDER);
+        break;
+        case UI_ACTION_CLEAN_DRIPTRAY:
+            disable_buttons = true;
+            pushMenu((void*)&ui_menu_preparing,false);
+            Printer::homeAxis(true,true,true);
+            PrintLine::moveRelativeDistanceInStepsReal(0,Printer::axisStepsPerMM[1]*200,0,0,Printer::homingFeedrate[1],false);
+            PrintLine::moveRelativeDistanceInStepsReal(0,0,Printer::axisStepsPerMM[2]*100,0,Printer::homingFeedrate[2],true);
+            Commands::printCurrentPosition();
+            menuLevel = 1;
+            pushMenu((void*)&ui_menu_clean_driptray,false);
+            disable_buttons = false;
+            UI_STATUS(UI_TEXT_PRINTER_READY);
+        break;
+        case UI_ACTION_LOAD:
+            wait_mode = 2;
+            disable_buttons = true;
+            Extruder::setTemperatureForExtruder(UI_SET_PRESET_EXTRUDER_TEMP_ABS,0);
+            pushMenu((void*)&ui_menu_preheat,false);
+            Printer::homeAxis(true,true,false);
+            Commands::printCurrentPosition();
+            UI_STATUS(UI_TEXT_HEATING_EXTRUDER);
+        break;
+        case UI_ACTION_LOAD_READY:
+            wait_mode = 3;
+            disable_buttons = true;
+            menuLevel = 1;
+            pushMenu((void*)&ui_menu_load,false);
+        break;
+        case UI_ACTION_LOAD_RUN:
+            wait_mode = 4;
+            disable_buttons = true;
+            menuLevel = 1;
+            pushMenu((void*)&ui_menu_load_run,false);
+            PrintLine::moveRelativeDistanceInSteps(0,0,0,Printer::axisStepsPerMM[3]*60,2,true,false);
+            Commands::printCurrentPosition();
+            lastAction = 0;
+            menuLevel = 1;
+            pushMenu((void*)&ui_menu_load_ask,false);
+        break;
+        case UI_ACTION_UNLOAD:
+            wait_mode = 5;
+            disable_buttons = true;
+            Extruder::setTemperatureForExtruder(UI_SET_PRESET_EXTRUDER_TEMP_ABS,0);
+            pushMenu((void*)&ui_menu_preheat,false);
+            Printer::homeAxis(true,true,false);
+            Commands::printCurrentPosition();
+            UI_STATUS(UI_TEXT_HEATING_EXTRUDER);
+        break;
+        case UI_ACTION_UNLOAD_RUN:
+            wait_mode = 6;
+            lastAction = 0;
+            menuLevel = 1;
+            pushMenu((void*)&ui_menu_unload,false);
+//            PrintLine::moveRelativeDistanceInSteps(0,0,0,Printer::axisStepsPerMM[3]*-60,3,true,false);
+//            Commands::printCurrentPosition();
+        break;
+#endif
+
         case UI_ACTION_PREHEAT_ABS:
             UI_STATUS(UI_TEXT_PREHEAT_ABS);
             Extruder::setTemperatureForExtruder(UI_SET_PRESET_EXTRUDER_TEMP_ABS,0);
@@ -3085,6 +3186,80 @@ void UIDisplay::slowAction()
         refreshPage();
         lastRefresh = time;
     }
+    
+    #if SIMPLE_MENU == 1
+/**********************************
+ ***** Commands for wait_mode *****
+ **********************************/
+
+// Clean Extruder
+   if (wait_mode == 1 && Extruder::current->tempControl.currentTemperatureC >= Extruder::current->tempControl.targetTemperatureC - 3)
+   {
+     wait_mode = 0;
+     menuLevel = 1;
+     pushMenu((void*)&ui_menu_clean_extr,false);
+     PrintLine::moveRelativeDistanceInStepsReal(0,Printer::axisStepsPerMM[1]*200,0,0,Printer::homingFeedrate[1],true);
+     PrintLine::moveRelativeDistanceInStepsReal(0,0,Printer::axisStepsPerMM[2]*100,0,Printer::homingFeedrate[2],true);
+     Commands::printCurrentPosition();
+     Extruder::setTemperatureForExtruder(0,0);
+     disable_buttons = false;
+     UI_STATUS(UI_TEXT_PRINTER_READY);
+     
+     return;
+   }
+   
+   // Load Filament
+   if (wait_mode == 2 && Extruder::current->tempControl.currentTemperatureC >= Extruder::current->tempControl.targetTemperatureC - 3)
+   {
+     executeAction(UI_ACTION_LOAD_READY);
+   }
+   
+   if (wait_mode == 3)
+   {
+//     if (Printer::isFilamentLoaded() == false) // Don't work for some reason ???
+     if (digitalRead(FIL_SENSOR_PIN) == LOW) // Wait for Filament Insertion
+     {
+       executeAction(UI_ACTION_LOAD_RUN);
+     }
+   }
+   
+   if (wait_mode == 4 && lastAction == UI_ACTION_BACK)
+   {
+     executeAction(UI_ACTION_LOAD_RUN);
+   }
+   
+   if (wait_mode == 4 && lastAction == UI_ACTION_OK)
+   {
+     wait_mode = 0;
+     disable_buttons = false;
+     Extruder::setTemperatureForExtruder(0,0);
+     UI_STATUS(UI_TEXT_PRINTER_READY);
+     menuLevel = 1;
+     pushMenu((void*)&ui_menu_maintenance,false);
+   }
+   
+   // Unload Filament
+   if (wait_mode == 5 && Extruder::current->tempControl.currentTemperatureC >= Extruder::current->tempControl.targetTemperatureC - 1)
+   {
+     executeAction(UI_ACTION_UNLOAD_RUN);
+   }
+   
+   if (wait_mode == 6 && lastAction == UI_ACTION_OK)
+   {
+     wait_mode = 0;
+     disable_buttons = false;
+     Extruder::setTemperatureForExtruder(0,0);
+     UI_STATUS(UI_TEXT_PRINTER_READY);
+     menuLevel = 1;
+     pushMenu((void*)&ui_menu_maintenance,false);
+   }
+   else if (wait_mode == 6 && !PrintLine::hasLines())
+   {
+     PrintLine::moveRelativeDistanceInSteps(0,0,0,Printer::axisStepsPerMM[3]*-5,4,true,false);
+     Commands::printCurrentPosition();
+   }
+   
+#endif
 }
 void UIDisplay::fastAction()
 {
