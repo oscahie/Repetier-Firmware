@@ -96,7 +96,7 @@
 #define UI_TEXT_ACTION_PREHEAT            "Heating Extruder","%ec/%Ec\002C","","Please Wait..."
 #define UI_TEXT_ACTION_CLEAN_EXTR         "Extruder Heated","","Ready for","     Cleaning"
 #define UI_TEXT_ACTION_CLEAN_DRIPTRAY     "Remove and Clean","Driptray","",""
-#define UI_TEXT_ACTION_LOAD               "INSERT FILAMENT","UNTIL REACH THE","OTHER END","[OK] TO NEXT"
+#define UI_TEXT_ACTION_LOAD               "INSERT FILAMENT","UNTIL REACH THE","OTHER END",""
 #define UI_TEXT_ACTION_LOAD_RUN           "FILAMENT IS","LOADING UP NOW","","PLEASE WAIT..."
 #define UI_TEXT_ACTION_LOAD_ASK           "CHECK FILAMENT","OUT FROM NOZZLE?","[BACK] TO RETRY","[OK] TO NEXT"
 #define UI_TEXT_ACTION_UNLOAD             "PULL FILAMENT","OUT AND PRESS","[OK] TO STOP","UNLOADING"
