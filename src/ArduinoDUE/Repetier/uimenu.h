@@ -182,7 +182,7 @@ for 2 row displays. You can add additional pages or change the default pages lik
   #if DAVINCI == 1
   UI_PAGE4(ui_page1,""cTEMP":%ec/%Ec"cDEG"C",cBED":%eB/%Eb"cDEG"C","Z:%x2 mm","%os");
   #else
-  UI_PAGE4(ui_page1,""cTEMP"1:%e0/%E0"cDEG"C",cTEMP"2:%e1/%E1"cDEG"C",cBED":%eB/%Eb"cDEG"C","Mul:%om%%% Z:%x2","%os");
+  UI_PAGE4(ui_page1,""cTEMP"1:%e0/%E0"cDEG"C",cTEMP"2:%e1/%E1"cDEG"C",cBED":%eB/%Eb"cDEG"C","%os");
   #endif
   
   UI_PAGE4(ui_page2,"X:%x0 mm","Y:%x1 mm","Z:%x2 mm","%os");
