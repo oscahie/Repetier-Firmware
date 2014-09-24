@@ -375,7 +375,7 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define FEATURE_CHECKSUM_FORCED 0
 #define FEATURE_FAN_CONTROL 0
 #define FEATURE_CONTROLLER 1
-#define UI_LANGUAGE 1
+#define UI_LANGUAGE 0
 #define UI_PAGES_DURATION 4000
 #define UI_ANIMATION 0
 #define UI_SPEEDDEPENDENT_POSITIONING 0
