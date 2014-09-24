@@ -287,13 +287,22 @@ Next step is to define submenus leading to the action.
 
 // **** Maintenance menu
 
+#if UI_AUTOLIGHTOFF_AFTER > 0
+UI_MENU_ACTIONCOMMAND(ui_menu_powersave,UI_TEXT_POWER_SAVE,UI_ACTION_TOGGLE_POWERSAVE);
+#define UI_POWER_SAVE_ENTRY ,&ui_menu_powersave
+#define UI_POWER_SAVE_COUNT 1
+#else
+#define UI_POWER_SAVE_ENTRY 
+#define UI_POWER_SAVE_COUNT 0
+#endif
+
 UI_MENU_ACTIONCOMMAND_FILTER(ui_menu_go_load,UI_TEXT_LOAD,UI_ACTION_LOAD,0,MENU_MODE_PRINTING);
 UI_MENU_ACTIONCOMMAND_FILTER(ui_menu_go_unload,UI_TEXT_UNLOAD,UI_ACTION_UNLOAD,0,MENU_MODE_PRINTING);
 UI_MENU_ACTIONCOMMAND_FILTER(ui_menu_go_clean_extr,UI_TEXT_CLEAN_EXTR,UI_ACTION_CLEAN_EXTR,0,MENU_MODE_PRINTING);
 UI_MENU_ACTIONCOMMAND_FILTER(ui_menu_go_clean_driptray,UI_TEXT_CLEAN_DRIPTRAY,UI_ACTION_CLEAN_DRIPTRAY,0,MENU_MODE_PRINTING);
 
-#define UI_MENU_MAINTENANCE {UI_MENU_ADDCONDBACK &ui_menu_go_load,&ui_menu_go_unload,&ui_menu_go_clean_extr,&ui_menu_go_clean_driptray}
-UI_MENU(ui_menu_maintenance,UI_MENU_MAINTENANCE,UI_MENU_BACKCNT + 4);
+#define UI_MENU_MAINTENANCE {UI_MENU_ADDCONDBACK &ui_menu_go_load,&ui_menu_go_unload,&ui_menu_go_clean_extr,&ui_menu_go_clean_driptray UI_POWER_SAVE_ENTRY}
+UI_MENU(ui_menu_maintenance,UI_MENU_MAINTENANCE,UI_MENU_BACKCNT + UI_POWER_SAVE_COUNT + 4);
 
 // **** Bed leveling menu
 #ifdef SOFTWARE_LEVELING
@@ -317,6 +326,7 @@ UI_MENU(ui_menu_extruder,UI_MENU_EXTRUDER,UI_MENU_BACKCNT+3);
 // **** SD card menu
 
 // **** Quick menu
+
 UI_MENU_ACTIONCOMMAND(ui_menu_toggle_light,UI_TEXT_LIGHTS_ONOFF,UI_ACTION_LIGHTS_ONOFF);
 UI_MENU_ACTIONCOMMAND(ui_menu_quick_preheat_pla,UI_TEXT_PREHEAT_PLA,UI_ACTION_PREHEAT_PLA);
 UI_MENU_ACTIONCOMMAND(ui_menu_quick_preheat_abs,UI_TEXT_PREHEAT_ABS,UI_ACTION_PREHEAT_ABS);

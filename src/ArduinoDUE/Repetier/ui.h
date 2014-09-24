@@ -167,6 +167,7 @@
 #define UI_ACTION_UNLOAD                1118
 #define UI_ACTION_UNLOAD_RUN            1119
 #endif
+#define UI_ACTION_TOGGLE_POWERSAVE      1120
 
 #define UI_ACTION_MENU_XPOS             4000
 #define UI_ACTION_MENU_YPOS             4001
