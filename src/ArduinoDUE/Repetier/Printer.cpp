@@ -554,6 +554,12 @@ void Printer::setup()
 #endif
 #endif
 
+    //Initialize Additional Pins
+#if SIMPLE_MENU == 1
+    SET_INPUT(FIL_SENSOR_PIN);
+    //PULLUP(FIL_SENSOR_PIN,HIGH)
+#endif
+
     //Initialize Step Pins
     SET_OUTPUT(X_STEP_PIN);
     SET_OUTPUT(Y_STEP_PIN);
@@ -685,7 +691,7 @@ void Printer::setup()
     SET_OUTPUT(FAN_BOARD_PIN);
     WRITE(FAN_BOARD_PIN,LOW);
 #endif
-#if EXT0_HEATER_PIN>-1
+#if defined(EXT0_HEATER_PIN) && EXT0_HEATER_PIN>-1
     SET_OUTPUT(EXT0_HEATER_PIN);
     WRITE(EXT0_HEATER_PIN,HEATER_PINS_INVERTED);
 #endif
@@ -709,7 +715,7 @@ void Printer::setup()
     SET_OUTPUT(EXT5_HEATER_PIN);
     WRITE(EXT5_HEATER_PIN,HEATER_PINS_INVERTED);
 #endif
-#if EXT0_EXTRUDER_COOLER_PIN>-1
+#if defined(EXT0_EXTRUDER_COOLER_PIN) && EXT0_EXTRUDER_COOLER_PIN>-1
     SET_OUTPUT(EXT0_EXTRUDER_COOLER_PIN);
     WRITE(EXT0_EXTRUDER_COOLER_PIN,LOW);
 #endif
@@ -861,9 +867,9 @@ void Printer::MemoryPosition()
 void Printer::GoToMemoryPosition(bool x,bool y,bool z,bool e,float feed)
 {
     bool all = !(x || y || z);
-    moveToReal((all || x ? memoryX : IGNORE_COORDINATE)
-               ,(all || y ? memoryY : IGNORE_COORDINATE)
-               ,(all || z ? memoryZ : IGNORE_COORDINATE)
+    moveToReal((all || x ? (lastCmdPos[X_AXIS] = memoryX) : IGNORE_COORDINATE)
+               ,(all || y ?(lastCmdPos[Y_AXIS] = memoryY) : IGNORE_COORDINATE)
+               ,(all || z ? (lastCmdPos[Z_AXIS] = memoryZ) : IGNORE_COORDINATE)
                ,(e ? memoryE:IGNORE_COORDINATE),
                feed);
     feedrate = memoryF;
@@ -1187,12 +1193,12 @@ void Printer::zBabystep() {
         WRITE(X2_STEP_PIN,HIGH);
 #endif
         WRITE(Y_STEP_PIN,HIGH);
-#if FEATURE_TWO_XSTEPPER
+#if FEATURE_TWO_YSTEPPER
         WRITE(Y2_STEP_PIN,HIGH);
 #endif
 #endif
         WRITE(Z_STEP_PIN,HIGH);
-#if FEATURE_TWO_XSTEPPER
+#if FEATURE_TWO_ZSTEPPER
         WRITE(Z2_STEP_PIN,HIGH);
 #endif
         HAL::delayMicroseconds(STEPPER_HIGH_DELAY + 2);
