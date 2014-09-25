@@ -361,7 +361,7 @@ void lcdWriteByte(uint8_t c,uint8_t rs)
 }
 void initializeLCD()
 {
-    HAL::delayMilliseconds(400);
+    HAL::delayMilliseconds(500);
     lcdStartWrite();
     HAL::i2cWrite(uid.outputMask & 255);
 #if UI_DISPLAY_I2C_CHIPTYPE==1
@@ -508,7 +508,7 @@ void initializeLCD()
     // according to datasheet, we need at least 40ms after power rises above 2.7V
     // before sending commands. Arduino can turn on way before 4.5V.
     // is this delay long enough for all cases??
-    HAL::delayMilliseconds(235);
+    HAL::delayMilliseconds(500);
     SET_OUTPUT(UI_DISPLAY_D4_PIN);
     SET_OUTPUT(UI_DISPLAY_D5_PIN);
     SET_OUTPUT(UI_DISPLAY_D6_PIN);
@@ -2596,18 +2596,26 @@ void UIDisplay::executeAction(int action)
         case UI_ACTION_HOME_ALL:
             Printer::homeAxis(true,true,true);
             Commands::printCurrentPosition();
+            Printer::setMenuMode(MENU_MODE_PRINTING,false);
+            UI_STATUS(UI_TEXT_PRINTER_READY);
             break;
         case UI_ACTION_HOME_X:
             Printer::homeAxis(true,false,false);
             Commands::printCurrentPosition();
+            Printer::setMenuMode(MENU_MODE_PRINTING,false);
+            UI_STATUS(UI_TEXT_PRINTER_READY);
             break;
         case UI_ACTION_HOME_Y:
             Printer::homeAxis(false,true,false);
             Commands::printCurrentPosition();
+            Printer::setMenuMode(MENU_MODE_PRINTING,false);
+            UI_STATUS(UI_TEXT_PRINTER_READY);
             break;
         case UI_ACTION_HOME_Z:
             Printer::homeAxis(false,false,true);
             Commands::printCurrentPosition();
+            Printer::setMenuMode(MENU_MODE_PRINTING,false);
+            UI_STATUS(UI_TEXT_PRINTER_READY);
             break;
         case UI_ACTION_SET_ORIGIN:
             Printer::setOrigin(0,0,0);
@@ -2670,6 +2678,11 @@ void UIDisplay::executeAction(int action)
             UI_STATUS(UI_TEXT_LIGHTS_ONOFF);
             break;
 #endif
+#if ENABLE_CLEAN_NOZZLE==1
+        case UI_ACTION_CLEAN_NOZZLE:
+	    Printer::cleanNozzle();
+        break;
+#endif	
         case UI_ACTION_PREHEAT_PLA:
             UI_STATUS(UI_TEXT_PREHEAT_PLA);
             Extruder::setTemperatureForExtruder(UI_SET_PRESET_EXTRUDER_TEMP_PLA,0);

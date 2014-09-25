@@ -36,13 +36,14 @@
 
 */
 
+// Must be specified before [#include "pins.h"] is called.
 #define MOTHERBOARD 999
+#define DAVINCI 1     // "1" For DAVINCI 1.0, "2" For DAVINCI 2.0 with 1 FAN, "3" For DAVINCI 2.0 with 2 FAN
 
 #include "pins.h"
 
 // ################## EDIT THESE SETTINGS MANUALLY ################
-#define SIMPLE_MENU 1 //For DaVinci 1.0
-#define DAVINCI 1     //"1" For DAVINCI 1.0, "2" For DAVINCI 2.0 whis 1 FAN, "3" For DAVINCI 2.0 whis 2 FAN
+#define SIMPLE_MENU 1 // For DaVinci 1.0
 // ################ END MANUAL SETTINGS ##########################
 
 #if DAVINCI==1
@@ -291,7 +292,7 @@
 #define MAX_ACCELERATION_UNITS_PER_SQ_SECOND_Z 100
 #define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_X 1000
 #define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Y 1000
-#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Z 100
+#define MAX_TRAVEL_ACCELERATION_UNITS_PER_SQ_SECOND_Z 150
 #define MAX_JERK 20
 #define MAX_ZJERK 0.3
 #define MOVE_CACHE_SIZE 32
@@ -375,13 +376,31 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define FEATURE_CHECKSUM_FORCED 0
 #define FEATURE_FAN_CONTROL 0
 #define FEATURE_CONTROLLER 1
-#define UI_LANGUAGE 1
+#define UI_LANGUAGE 0
 #define UI_PAGES_DURATION 4000
 #define UI_ANIMATION 0
 #define UI_SPEEDDEPENDENT_POSITIONING 0
 #define UI_DISABLE_AUTO_PAGESWITCH 1
 #define UI_AUTORETURN_TO_MENU_AFTER 30000
 #define UI_AUTOLIGHTOFF_AFTER 1
+#define ENABLE_CLEAN_NOZZLE 1
+#if ENABLE_CLEAN_NOZZLE
+    // Set Starting Position for 1st Cleaning (Position of nozzle before the clean starts)
+    #define CLEAN_X_START 0
+    #define CLEAN_Y_START 0
+    // Distance to move to for cleaning the 1st extruder.
+    #define CLEAN_X 20
+    #define CLEAN_Y 20
+    // Set Starting Position for 2nd Cleaning (Position of nozzle before the clean starts)
+    #define CLEAN2_X_START 197
+    #define CLEAN2_Y_START 0
+    // Distance to move to for cleaning the 2nd extruder.
+    #define CLEAN2_X -20
+    #define CLEAN2_Y 20
+    // On some printers with dual extruders, the Y-Axis can collide when moving to clean the 2nd extruder
+    // Here you can specify how much clearance is needed to avoid the collision.
+    #define CLEAN_Y_CLEARANCE 15
+#endif
 #define FEATURE_UI_KEYS 0
 #define UI_ENCODER_SPEED 1
 #define UI_KEY_BOUNCETIME 10

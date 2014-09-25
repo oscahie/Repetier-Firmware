@@ -84,6 +84,7 @@
 
 #if SIMPLE_MENU == 1
 // Added for Da Vinci 1.0
+#define UI_TEXT_HOME_AXES                 "Home Axes"
 #define UI_TEXT_EXTR_OFF                  "Turn Off"
 #define UI_TEXT_TEMP                      "Heater"
 #define UI_TEXT_MAINTENANCE               "Maintenance"
@@ -96,13 +97,14 @@
 #define UI_TEXT_ACTION_PREHEAT            "Heating Extruder","%ec/%Ec\002C","","Please Wait..."
 #define UI_TEXT_ACTION_CLEAN_EXTR         "Extruder Heated","","Ready for","     Cleaning"
 #define UI_TEXT_ACTION_CLEAN_DRIPTRAY     "Remove and Clean","Driptray","",""
-#define UI_TEXT_ACTION_LOAD               "INSERT FILAMENT","UNTIL REACH THE","OTHER END","[OK] TO NEXT"
+#define UI_TEXT_ACTION_LOAD               "INSERT FILAMENT","UNTIL REACH THE","OTHER END",""
 #define UI_TEXT_ACTION_LOAD_RUN           "FILAMENT IS","LOADING UP NOW","","PLEASE WAIT..."
 #define UI_TEXT_ACTION_LOAD_ASK           "CHECK FILAMENT","OUT FROM NOZZLE?","[BACK] TO RETRY","[OK] TO NEXT"
 #define UI_TEXT_ACTION_UNLOAD             "PULL FILAMENT","OUT AND PRESS","[OK] TO STOP","UNLOADING"
-#define UI_TEXT_POWER_SAVE    	          "Powersave:%Ps"
 #endif
 
+#define UI_TEXT_CLEAN_NOZZLE 	 "Cleaning Nozzle"
+#define UI_TEXT_POWER_SAVE    	 "Powersave:%Ps"
 #define UI_TEXT_ON               "ON"
 #define UI_TEXT_OFF              "OFF"
 #define UI_TEXT_NA               "N/A" // Output for not available
@@ -1240,9 +1242,9 @@
 #define UI_TEXT_ACTION_LOAD_RUN           "LE FIL EST","MAINTENANT","CHARGE","ATTENDRE..."
 #define UI_TEXT_ACTION_LOAD_ASK           "VERIFIER QUE LE","FIL SOIT SORTI","[BACK]RECOMMENCER","[OK]CONTINUER"
 #define UI_TEXT_ACTION_UNLOAD             "TIRER LE FIL","ET PRESSEZ","[OK]POUR ARRETER","LE DECHARGEMENT"
-#define UI_TEXT_POWER_SAVE    	          "Mode Eco:%Ps"
 #endif
 
+#define UI_TEXT_POWER_SAVE       "Mode Eco:%Ps"
 #define UI_TEXT_ON               "ON"
 #define UI_TEXT_OFF              "OFF"
 #define UI_TEXT_NA               "N/A" // Output for not available

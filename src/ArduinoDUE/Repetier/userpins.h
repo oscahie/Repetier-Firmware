@@ -21,12 +21,17 @@
 #define HEATER_1_PIN		17
 #define TEMP_1_PIN		14 // ADC channel #, not a PIN #
 
-#if NUM_EXTRUDER==1                //for davinci 1.0 
+#if DAVINCI==1                //for davinci 1.0
 #define HEATER_0_PIN		16
-#define TEMP_0_PIN
+#define TEMP_0_PIN              13
 #define ORIG_E0_ENABLE_PIN     123
 #define ORIG_E0_STEP_PIN       122
 #define ORIG_E0_DIR_PIN	       121
+#define HEATER_2_PIN		-1
+#define TEMP_2_PIN		-1
+#define ORIG_E1_ENABLE_PIN	-1
+#define ORIG_E1_STEP_PIN	-1
+#define ORIG_E1_DIR_PIN		-1
 #else                             //for davinci 2.0
 #define HEATER_2_PIN		16//HEATER_0_PIN //switch pin value 
 #define TEMP_2_PIN		13//TEMP_0_PIN   //switch pin value
