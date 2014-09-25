@@ -361,7 +361,7 @@ void lcdWriteByte(uint8_t c,uint8_t rs)
 }
 void initializeLCD()
 {
-    HAL::delayMilliseconds(500);
+    HAL::delayMilliseconds(400);
     lcdStartWrite();
     HAL::i2cWrite(uid.outputMask & 255);
 #if UI_DISPLAY_I2C_CHIPTYPE==1
@@ -508,7 +508,7 @@ void initializeLCD()
     // according to datasheet, we need at least 40ms after power rises above 2.7V
     // before sending commands. Arduino can turn on way before 4.5V.
     // is this delay long enough for all cases??
-    HAL::delayMilliseconds(500);
+    HAL::delayMilliseconds(400);
     SET_OUTPUT(UI_DISPLAY_D4_PIN);
     SET_OUTPUT(UI_DISPLAY_D5_PIN);
     SET_OUTPUT(UI_DISPLAY_D6_PIN);
