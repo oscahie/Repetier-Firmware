@@ -388,9 +388,16 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
     // Set Starting Position for 1st Cleaning (Position of nozzle before the clean starts)
     #define CLEAN_X_START 0
     #define CLEAN_Y_START 0
-    // Distance to move to for cleaning the 1st extruder.
+    // Distance to move to for cleaning the 1st extruder. DaVinci 1.0
+    #if DAVINCI==1
     #define CLEAN_X 20
     #define CLEAN_Y 20
+    #endif
+    // Distance to move to for cleaning the 1st extruder. DaVinci 2.0
+    #if DAVINCI>=2
+    #define CLEAN_X 0
+    #define CLEAN_Y 20
+    #endif
     // Set Starting Position for 2nd Cleaning (Position of nozzle before the clean starts)
     #define CLEAN2_X_START 197
     #define CLEAN2_Y_START 0

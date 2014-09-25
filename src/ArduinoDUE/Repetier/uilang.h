@@ -1226,6 +1226,7 @@
 
 #if SIMPLE_MENU == 1
 // Added for Da Vinci 1.0
+#define UI_TEXT_HOME_AXES                 "Accueil Axes"
 #define UI_TEXT_EXTR_OFF                  "Arret"
 #define UI_TEXT_TEMP                      "Chauffage"
 #define UI_TEXT_MAINTENANCE               "Maintenance"
@@ -1238,12 +1239,13 @@
 #define UI_TEXT_ACTION_PREHEAT            "Chauff Extrudeuse","%ec/%Ec\002C","","Patientez..."
 #define UI_TEXT_ACTION_CLEAN_EXTR         "Extrudeuse chaude","Prete pour","Le Nettoyage","ATTENDRE"
 #define UI_TEXT_ACTION_CLEAN_DRIPTRAY     "Vous Pouvez","Enlenver Et","Nettoyer","Reservoir"
-#define UI_TEXT_ACTION_LOAD               "INSERER LE FIL","ET ATTENDRE QUE","LE FIL SORTE","[OK]CONTINUER"
+#define UI_TEXT_ACTION_LOAD               "INSERER LE FIL","ET ATTENDRE QUE","LE FIL SORTE",""
 #define UI_TEXT_ACTION_LOAD_RUN           "LE FIL EST","MAINTENANT","CHARGE","ATTENDRE..."
 #define UI_TEXT_ACTION_LOAD_ASK           "VERIFIER QUE LE","FIL SOIT SORTI","[BACK]RECOMMENCER","[OK]CONTINUER"
 #define UI_TEXT_ACTION_UNLOAD             "TIRER LE FIL","ET PRESSEZ","[OK]POUR ARRETER","LE DECHARGEMENT"
 #endif
 
+#define UI_TEXT_CLEAN_NOZZLE 	 "Nettoyage Buse"
 #define UI_TEXT_POWER_SAVE       "Mode Eco:%Ps"
 #define UI_TEXT_ON               "ON"
 #define UI_TEXT_OFF              "OFF"
