@@ -41,8 +41,8 @@
 #include "pins.h"
 
 // ################## EDIT THESE SETTINGS MANUALLY ################
-#define SIMPLE_MENU 1 //For DaVinci 1.0
-#define DAVINCI 1     //"1" For DAVINCI 1.0, "2" For DAVINCI 2.0 whis 1 FAN, "3" For DAVINCI 2.0 whis 2 FAN
+#define SIMPLE_MENU 1 // For DaVinci 1.0
+#define DAVINCI 1     // "1" For DAVINCI 1.0, "2" For DAVINCI 2.0 with 1 FAN, "3" For DAVINCI 2.0 with 2 FAN
 // ################ END MANUAL SETTINGS ##########################
 
 #if DAVINCI==1
@@ -227,7 +227,7 @@
 #define ENDSTOP_Y_RETEST_REDUCTION_FACTOR 3
 #define ENDSTOP_Z_RETEST_REDUCTION_FACTOR 4
 #define ENDSTOP_X_BACK_ON_HOME 0
-#define ENDSTOP_Y_BACK_ON_HOME 7
+#define ENDSTOP_Y_BACK_ON_HOME 0
 #define ENDSTOP_Z_BACK_ON_HOME 0
 #define ALWAYS_CHECK_ENDSTOPS 1
 
@@ -382,6 +382,24 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define UI_DISABLE_AUTO_PAGESWITCH 1
 #define UI_AUTORETURN_TO_MENU_AFTER 30000
 #define UI_AUTOLIGHTOFF_AFTER 1
+#define ENABLE_CLEAN_NOZZLE 1
+#if ENABLE_CLEAN_NOZZLE
+    // Set Starting Position for 1st Cleaning (Position of nozzle before the clean starts)
+    #define CLEAN_X_START 0
+    #define CLEAN_Y_START 0
+    // Distance to move to for cleaning the 1st extruder.
+    #define CLEAN_X 20
+    #define CLEAN_Y 20
+    // Set Starting Position for 2nd Cleaning (Position of nozzle before the clean starts)
+    #define CLEAN2_X_START 197
+    #define CLEAN2_Y_START 0
+    // Distance to move to for cleaning the 2nd extruder.
+    #define CLEAN2_X -20
+    #define CLEAN2_Y 20
+    // On some printers with dual extruders, the Y-Axis can collide when moving to clean the 2nd extruder
+    // Here you can specify how much clearance is needed to avoid the collision.
+    #define CLEAN_Y_CLEARANCE 15
+#endif
 #define FEATURE_UI_KEYS 0
 #define UI_ENCODER_SPEED 1
 #define UI_KEY_BOUNCETIME 10

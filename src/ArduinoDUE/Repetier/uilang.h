@@ -103,6 +103,7 @@
 #define UI_TEXT_ACTION_UNLOAD             "PULL FILAMENT","OUT AND PRESS","[OK] TO STOP","UNLOADING"
 #endif
 
+#define UI_TEXT_CLEAN_NOZZLE 	 "Cleaning Nozzle"
 #define UI_TEXT_POWER_SAVE    	 "Powersave:%Ps"
 #define UI_TEXT_ON               "ON"
 #define UI_TEXT_OFF              "OFF"

@@ -312,12 +312,37 @@ UI_MENU(ui_menu_level,UI_MENU_LEVEL,4+3*UI_SPEED+UI_MENU_BACKCNT);
 
 // **** Extruder menu
 
-UI_MENU_CHANGEACTION(ui_menu_ext_temp0,UI_TEXT_EXTR_TEMP,UI_ACTION_EXTRUDER0_TEMP);
+UI_MENU_CHANGEACTION(ui_menu_ext_temp0,UI_TEXT_EXTR0_TEMP,UI_ACTION_EXTRUDER0_TEMP);
+UI_MENU_CHANGEACTION(ui_menu_ext_temp1,UI_TEXT_EXTR1_TEMP,UI_ACTION_EXTRUDER1_TEMP);
 UI_MENU_CHANGEACTION(ui_menu_bed_temp, UI_TEXT_BED_TEMP,UI_ACTION_HEATED_BED_TEMP);
-UI_MENU_ACTIONCOMMAND(ui_menu_ext_off0,UI_TEXT_EXTR_OFF,UI_ACTION_EXTRUDER0_OFF);
+UI_MENU_ACTIONCOMMAND(ui_menu_ext_sel0,UI_TEXT_EXTR0_SELECT,UI_ACTION_SELECT_EXTRUDER0);
+UI_MENU_ACTIONCOMMAND(ui_menu_ext_sel1,UI_TEXT_EXTR1_SELECT,UI_ACTION_SELECT_EXTRUDER1);
+UI_MENU_ACTIONCOMMAND(ui_menu_ext_off0,UI_TEXT_EXTR0_OFF,UI_ACTION_EXTRUDER0_OFF);
+UI_MENU_ACTIONCOMMAND(ui_menu_ext_off1,UI_TEXT_EXTR1_OFF,UI_ACTION_EXTRUDER1_OFF);
+UI_MENU_ACTIONCOMMAND(ui_menu_ext_origin,UI_TEXT_EXTR_ORIGIN,UI_ACTION_RESET_EXTRUDER);
+#if NUM_EXTRUDER==2
+#define UI_MENU_EXTCOND &ui_menu_ext_temp0,&ui_menu_ext_temp1,&ui_menu_ext_off0,&ui_menu_ext_off1,&ui_menu_ext_sel0,&ui_menu_ext_sel1,
+#define UI_MENU_EXTCNT 6
+#elif NUM_EXTRUDER>2
+UI_MENU_CHANGEACTION(ui_menu_ext_temp2,UI_TEXT_EXTR2_TEMP,UI_ACTION_EXTRUDER2_TEMP);
+UI_MENU_ACTIONCOMMAND(ui_menu_ext_sel2,UI_TEXT_EXTR2_SELECT,UI_ACTION_SELECT_EXTRUDER2);
+UI_MENU_ACTIONCOMMAND(ui_menu_ext_off2,UI_TEXT_EXTR2_OFF,UI_ACTION_EXTRUDER2_OFF);
+#define UI_MENU_EXTCOND &ui_menu_ext_temp0,&ui_menu_ext_temp1,&ui_menu_ext_temp2,&ui_menu_ext_off0,&ui_menu_ext_off1,&ui_menu_ext_off2,&ui_menu_ext_sel0,&ui_menu_ext_sel1,&ui_menu_ext_sel1,
+#define UI_MENU_EXTCNT 9
+#else
+#define UI_MENU_EXTCOND &ui_menu_ext_temp0,&ui_menu_ext_off0,
+#define UI_MENU_EXTCNT 2
+#endif
+#if HAVE_HEATED_BED==true
+#define UI_MENU_BEDCOND &ui_menu_bed_temp,
+#define UI_MENU_BEDCNT 1
+#else
+#define UI_MENU_BEDCOND
+#define UI_MENU_BEDCNT 0
+#endif
 
-#define UI_MENU_EXTRUDER {UI_MENU_ADDCONDBACK &ui_menu_bed_temp,&ui_menu_ext_temp0,&ui_menu_ext_off0}
-UI_MENU(ui_menu_extruder,UI_MENU_EXTRUDER,UI_MENU_BACKCNT+3);
+#define UI_MENU_EXTRUDER {UI_MENU_ADDCONDBACK UI_MENU_BEDCOND UI_MENU_EXTCOND &ui_menu_go_epos,&ui_menu_ext_origin}
+UI_MENU(ui_menu_extruder,UI_MENU_EXTRUDER,UI_MENU_BACKCNT+UI_MENU_BEDCNT+UI_MENU_EXTCNT+2);
 
 // **** SD card menu
 
@@ -329,6 +354,16 @@ UI_MENU_ACTIONCOMMAND(ui_menu_powersave,UI_TEXT_POWER_SAVE,UI_ACTION_TOGGLE_POWE
 #else
 #define UI_POWER_SAVE_ENTRY 
 #define UI_POWER_SAVE_COUNT 0
+#endif
+
+//Clean Nozzle
+#if ENABLE_CLEAN_NOZZLE == 1
+UI_MENU_ACTIONCOMMAND(ui_menu_clean_nozzle,UI_TEXT_CLEAN_NOZZLE,UI_ACTION_CLEAN_NOZZLE);
+#define UI_CLEAN_NOZZLE_ENTRY ,&ui_menu_clean_nozzle
+#define UI_CLEAN_NOZZLE_COUNT 1
+#else
+#define UI_CLEAN_NOZZLE_ENTRY 
+#define UI_CLEAN_NOZZLE_COUNT 0
 #endif
 
 // **** Quick menu
@@ -357,8 +392,8 @@ UI_MENU_ACTIONCOMMAND(ui_menu_quick_debug,"Write Debug",UI_ACTION_WRITE_DEBUG);
 #define DEBUG_PRINT_EXTRA
 #endif
 
-#define UI_MENU_QUICK {UI_MENU_ADDCONDBACK &ui_menu_home_all BABY_ENTRY ,&ui_menu_quick_speedmultiply,&ui_menu_quick_flowmultiply,&ui_menu_toggle_light,&ui_menu_powersave,&ui_menu_quick_preheat_pla,&ui_menu_quick_preheat_abs,&ui_menu_quick_cooldown,&ui_menu_quick_stopstepper DEBUG_PRINT_EXTRA}
-UI_MENU(ui_menu_quick,UI_MENU_QUICK,UI_MENU_BACKCNT+BABY_CNT+DEBUG_PRINT_COUNT+8+UI_POWER_SAVE_COUNT);
+#define UI_MENU_QUICK {UI_MENU_ADDCONDBACK &ui_menu_home_all BABY_ENTRY ,&ui_menu_quick_speedmultiply,&ui_menu_quick_flowmultiply,&ui_menu_toggle_light UI_POWER_SAVE_ENTRY UI_CLEAN_NOZZLE_ENTRY,&ui_menu_quick_preheat_pla,&ui_menu_quick_preheat_abs,&ui_menu_quick_cooldown,&ui_menu_quick_stopstepper DEBUG_PRINT_EXTRA}
+UI_MENU(ui_menu_quick,UI_MENU_QUICK,UI_MENU_BACKCNT+BABY_CNT+DEBUG_PRINT_COUNT+UI_POWER_SAVE_COUNT+UI_CLEAN_NOZZLE_COUNT+8);
 
 // **** Fan menu
 
