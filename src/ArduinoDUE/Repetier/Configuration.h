@@ -36,13 +36,14 @@
 
 */
 
+// Must be specified before [#include "pins.h"] is called.
 #define MOTHERBOARD 999
+#define DAVINCI 1     // "1" For DAVINCI 1.0, "2" For DAVINCI 2.0 with 1 FAN, "3" For DAVINCI 2.0 with 2 FAN
 
 #include "pins.h"
 
 // ################## EDIT THESE SETTINGS MANUALLY ################
 #define SIMPLE_MENU 1 // For DaVinci 1.0
-#define DAVINCI 1     // "1" For DAVINCI 1.0, "2" For DAVINCI 2.0 with 1 FAN, "3" For DAVINCI 2.0 with 2 FAN
 // ################ END MANUAL SETTINGS ##########################
 
 #if DAVINCI==1
