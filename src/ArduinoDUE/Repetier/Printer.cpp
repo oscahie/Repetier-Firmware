@@ -195,7 +195,7 @@ void Printer::cleanNozzle()
 	moveToReal(IGNORE_COORDINATE,CLEAN_Y_START,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
 
 	#if NUM_EXTRUDER==2
-        // Move Y-Axis for Anti-Colision
+        // Move Y-Axis for Anti-Collision
         moveToReal(IGNORE_COORDINATE,CLEAN_Y_CLEARANCE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
        	//set starting position
 	moveToReal(CLEAN2_X_START,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
@@ -220,10 +220,10 @@ void Printer::cleanNozzle()
 	moveToReal(IGNORE_COORDINATE,CLEAN2_Y_START + CLEAN2_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
 	//fourth step
 	moveToReal(IGNORE_COORDINATE,CLEAN2_Y_START,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+        // Move Y-Axis for Anti-Collision
+        moveToReal(IGNORE_COORDINATE,CLEAN_Y_CLEARANCE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
 	#endif
         Commands::waitUntilEndOfAllMoves();
-        // Move Y-Axis for Anti-Colision
-        moveToReal(IGNORE_COORDINATE,CLEAN_Y_CLEARANCE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
         //back to original position and original extruder
         //X,Y first then Z
 	moveToReal(tmp_x,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
