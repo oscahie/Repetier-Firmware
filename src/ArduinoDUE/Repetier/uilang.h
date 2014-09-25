@@ -84,6 +84,7 @@
 
 #if SIMPLE_MENU == 1
 // Added for Da Vinci 1.0
+#define UI_TEXT_HOME_AXES                 "Home Axes"
 #define UI_TEXT_EXTR_OFF                  "Turn Off"
 #define UI_TEXT_TEMP                      "Heater"
 #define UI_TEXT_MAINTENANCE               "Maintenance"
