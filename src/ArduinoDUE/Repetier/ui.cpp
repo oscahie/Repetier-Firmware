@@ -2554,6 +2554,7 @@ void UIDisplay::executeAction(int action)
           if(!disable_buttons) {
           #endif
             if(menuLevel>0) menuLevel--;
+            else menuPos[0]=0;
             Printer::setAutomount(false);
             activeAction = 0;
            #if SIMPLE_MENU == 1
@@ -2586,6 +2587,7 @@ void UIDisplay::executeAction(int action)
          if(!disable_buttons) {
          #endif
             menuLevel = 0;
+            menuPos[0]=0;
          #if SIMPLE_MENU == 1
          }
          #endif
