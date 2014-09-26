@@ -582,10 +582,7 @@ uint8_t Printer::setDestinationStepsFromGCode(GCode *com)
 
 void Printer::setup()
 {
-#if FEATURE_WATCHDOG
-    WDT_Restart(WDT);
-#endif // FEATURE_WATCHDOG
-
+    HAL::stopWatchdog();
 #if FEATURE_CONTROLLER==5
     HAL::delayMilliseconds(100);
 #endif // FEATURE_CONTROLLER
@@ -903,7 +900,7 @@ void Printer::setup()
     sd.autoPrint();
 #endif
 #if FEATURE_WATCHDOG
-  WDT_Restart(WDT);
+    HAL::startWatchdog();
 #endif // FEATURE_WATCHDOG
 }
 

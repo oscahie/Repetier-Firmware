@@ -338,7 +338,7 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define SERVO1_PIN -1
 #define SERVO2_PIN -1
 #define SERVO3_PIN -1
-#define FEATURE_WATCHDOG 1
+#define FEATURE_WATCHDOG 0
 
 // #################### Z-Probing #####################
 
