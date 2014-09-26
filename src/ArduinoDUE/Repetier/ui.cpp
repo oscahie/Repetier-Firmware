@@ -1946,10 +1946,10 @@ void UIDisplay::okAction()
     UIMenu *men = (UIMenu*)menu[menuLevel];
     //uint8_t nr = pgm_read_word_near(&(menu->numEntries));
     uint8_t mtype = pgm_read_byte(&(men->menuType));
-    UIMenuEntry **entries;
-    UIMenuEntry *ent;
-    unsigned char entType;
-    int action;
+    UIMenuEntry **entries = (UIMenuEntry**)pgm_read_word(&(men->entries));
+    UIMenuEntry *ent =(UIMenuEntry *)pgm_read_word(&(entries[menuPos[menuLevel]]));
+    unsigned char entType = pgm_read_byte(&(ent->menuType));// 0 = Info, 1 = Headline, 2 = submenu ref, 3 = direct action command, 4 = modify action
+    int action = pgm_read_word(&(ent->action));
     if(mtype==3)   // action menu
     {
         action = pgm_read_word(&(men->id));
@@ -1969,18 +1969,18 @@ void UIDisplay::okAction()
         return;
     }
 #if SDSUPPORT
-if(mtype == 1)
+    if(mtype==1)
     {
-        if(menuPos[menuLevel] == 0)   // Selected back instead of file
+        if(menuPos[menuLevel]==0)   // Selected back instead of file
         {
             executeAction(UI_ACTION_BACK);
             return;
         }
-        
         if(!sd.sdactive)
             return;
-        uint8_t filePos = menuPos[menuLevel] - 1;
-        char filename[LONG_FILENAME_LENGTH + 1];
+
+        uint8_t filePos = menuPos[menuLevel]-1;
+        char filename[LONG_FILENAME_LENGTH+1];
 
         getSDFilenameAt(filePos, filename);
         if(isDirname(filename))   // Directory change selected
@@ -2035,10 +2035,6 @@ if(mtype == 1)
         return;
     }
 #endif
-    entries = (UIMenuEntry**)pgm_read_word(&(men->entries));
-    ent =(UIMenuEntry *)pgm_read_word(&(entries[menuPos[menuLevel]]));
-    entType = pgm_read_byte(&(ent->menuType));// 0 = Info, 1 = Headline, 2 = submenu ref, 3 = direct action command, 4 = modify action
-    action = pgm_read_word(&(ent->action));
     if(entType==2)   // Enter submenu
     {
         pushMenu((void*)action,false);
