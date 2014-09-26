@@ -250,15 +250,15 @@
 //#define X_MAX_LENGTH 235
 #define Y_MAX_LENGTH 217
 #define Z_MAX_LENGTH 202
-#define X_MIN_POS 0
-#define Y_MIN_POS 0
+#define X_MIN_POS -30
+#define Y_MIN_POS -15
 #define Z_MIN_POS 0
 
 // ##########################################################################################
 // ##                           Movement settings                                          ##
 // ##########################################################################################
 
-#define FEATURE_BABYSTEPPING 1
+#define FEATURE_BABYSTEPPING 0
 #define BABYSTEP_MULTIPLICATOR 1
 
 #define DELTA_SEGMENTS_PER_SECOND_PRINT 180 // Move accurate setting for print moves
@@ -358,12 +358,12 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define Z_PROBE_START_SCRIPT ""
 #define Z_PROBE_FINISHED_SCRIPT ""
 #define FEATURE_AUTOLEVEL 1
-#define Z_PROBE_X1 25
-#define Z_PROBE_Y1 6
-#define Z_PROBE_X2 25
-#define Z_PROBE_Y2 216
-#define Z_PROBE_X3 211
-#define Z_PROBE_Y3 216
+#define Z_PROBE_X1 -4
+#define Z_PROBE_Y1 -8
+#define Z_PROBE_X2 -4
+#define Z_PROBE_Y2 202
+#define Z_PROBE_X3 182
+#define Z_PROBE_Y3 202
 
 #ifndef SDSUPPORT  // Some boards have sd support on board. These define the values already in pins.h
 #define SDSUPPORT 1
@@ -386,8 +386,8 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define ENABLE_CLEAN_NOZZLE 1
 #if ENABLE_CLEAN_NOZZLE
     // Set Starting Position for 1st Cleaning (Position of nozzle before the clean starts)
-    #define CLEAN_X_START 0
-    #define CLEAN_Y_START 0
+    #define CLEAN_X_START -30
+    #define CLEAN_Y_START -15
     // Distance to move to for cleaning the 1st extruder.
     #if DAVINCI==1     // Da Vinci 1.0
     #define CLEAN_X 20
@@ -397,8 +397,8 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
     #define CLEAN_Y 30
     #endif
     // Set Starting Position for 2nd Cleaning (Position of nozzle before the clean starts)
-    #define CLEAN2_X_START 197
-    #define CLEAN2_Y_START 0
+    #define CLEAN2_X_START 167
+    #define CLEAN2_Y_START -15
     // Distance to move to for cleaning the 2nd extruder.
     #define CLEAN2_X -30
     #define CLEAN2_Y 0
@@ -415,7 +415,7 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define FEATURE_BEEPER 1
 #define CASE_LIGHTS_PIN 85
 #define CASE_LIGHT_DEFAULT_ON 1
-#define UI_START_SCREEN_DELAY 2000
+#define UI_START_SCREEN_DELAY 4000
 /**
 Beeper sound definitions for short beeps during key actions
 and longer beeps for important actions.
