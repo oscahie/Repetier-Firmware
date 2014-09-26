@@ -2543,6 +2543,7 @@ void UIDisplay::executeAction(int action)
     else
         switch(action)
         {
+        case UI_ACTION_RIGHT_KEY:
         case UI_ACTION_OK:
            #if SIMPLE_MENU == 1
            if(!disable_buttons) {
