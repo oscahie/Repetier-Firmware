@@ -158,15 +158,16 @@ int debugWaitLoop = 0;
 #if ENABLE_CLEAN_NOZZLE
 void Printer::cleanNozzle()
 	{
+        //ensure homing is done
+	if(!Printer::isHomed()) Printer::homeAxis(true,true,true);
+
 	//we save current configuration and position
 	uint8_t tmp_extruderid=Extruder::current->id;
 	float tmp_x = currentPosition[X_AXIS];
 	float tmp_y = currentPosition[Y_AXIS];
 	float tmp_z = currentPosition[Z_AXIS];
 	
-	//ensure homing is done and select E0
-	if(!Printer::isHomed()) Printer::homeAxis(true,true,true);
-        else Extruder::selectExtruderById(0); //just select E0
+        Extruder::selectExtruderById(0); //just select E0
      
 	UI_STATUS_UPD_RAM(UI_TEXT_CLEAN_NOZZLE);
         // move Z to zMin + 15 if under this position to be sure nozzle do not touch metal holder
