@@ -338,7 +338,15 @@ WARNING: Servos can draw a considerable amount of current. Make sure your system
 #define SERVO1_PIN -1
 #define SERVO2_PIN -1
 #define SERVO3_PIN -1
-#define FEATURE_WATCHDOG 0
+
+
+/* A watchdog resets the printer, if a signal is not send within predifined time limits. That way we can be sure that the board
+is always running and is not hung up for some unknown reason. 
+
+IMPORTANT: The ARM processors need a special board definition to work properly. 
+See: AdditionalArduinoFiles: README.txt on how to install them. 
+*/
+#define FEATURE_WATCHDOG 1
 
 // #################### Z-Probing #####################
 
