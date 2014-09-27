@@ -2523,7 +2523,7 @@ void UIDisplay::executeAction(int action)
 		}
 	#endif
 	#if defined(UI_BACKLIGHT_PIN)
-    WRITE(UI_BACKLIGHT_PIN, HIGH);
+    if (!(READ(UI_BACKLIGHT_PIN)))WRITE(UI_BACKLIGHT_PIN, HIGH);
 	#endif
 	}
 #endif
@@ -2539,6 +2539,7 @@ void UIDisplay::executeAction(int action)
     else
         switch(action)
         {
+        case UI_ACTION_RIGHT_KEY:
         case UI_ACTION_OK:
            #if SIMPLE_MENU == 1
            if(!disable_buttons) {
@@ -2671,7 +2672,6 @@ void UIDisplay::executeAction(int action)
 #endif
 #if CASE_LIGHTS_PIN > 0
         case UI_ACTION_LIGHTS_ONOFF:
-            TOGGLE(UI_BACKLIGHT_PIN);
             TOGGLE(CASE_LIGHTS_PIN);
                         if (READ(CASE_LIGHTS_PIN))
 			buselight=true;
