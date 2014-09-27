@@ -49,7 +49,7 @@
 #if DAVINCI==1
 #define NUM_EXTRUDER 1
 #define EXT0_INVERSE 0
-#define X_MAX_LENGTH 235
+#define X_MAX_LENGTH 235 - ENDSTOP_X_BACK_ON_HOME
 #define UI_PRINTER_NAME    "  Da Vinci 1.0"
 #define UI_PRINTER_COMPANY "  XYZ Printing"
 #endif
@@ -57,7 +57,7 @@
 #if DAVINCI==2
 #define NUM_EXTRUDER 2
 #define EXT0_INVERSE 1
-#define X_MAX_LENGTH 199
+#define X_MAX_LENGTH 199 - ENDSTOP_X_BACK_ON_HOME
 #define EXT1_EXTRUDER_COOLER_PIN ORIG_FAN_PIN
 #define UI_PRINTER_NAME    "  Da Vinci 2.0"
 #define UI_PRINTER_COMPANY "  XYZ Printing"
@@ -66,7 +66,7 @@
 #if DAVINCI==3
 #define NUM_EXTRUDER 2
 #define EXT0_INVERSE 1
-#define X_MAX_LENGTH 199
+#define X_MAX_LENGTH 199 - ENDSTOP_X_BACK_ON_HOME
 #define EXT1_EXTRUDER_COOLER_PIN ORIG_FAN2_PIN
 #define UI_PRINTER_NAME    "  Da Vinci 2.0"
 #define UI_PRINTER_COMPANY "  XYZ Printing"
@@ -248,8 +248,8 @@
 #define Y_HOME_DIR -1
 #define Z_HOME_DIR -1
 //#define X_MAX_LENGTH 235
-#define Y_MAX_LENGTH 217
-#define Z_MAX_LENGTH 202
+#define Y_MAX_LENGTH 217 - ENDSTOP_Y_BACK_ON_HOME
+#define Z_MAX_LENGTH 202 - ENDSTOP_Z_BACK_ON_HOME
 #define X_MIN_POS -30
 #define Y_MIN_POS -15
 #define Z_MIN_POS 0
