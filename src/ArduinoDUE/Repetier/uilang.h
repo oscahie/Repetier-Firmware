@@ -82,7 +82,6 @@
 // can overwrite the definition. That way new strings are at least in english
 // available.
 
-#if SIMPLE_MENU == 1
 // Added for Da Vinci 1.0
 #define UI_TEXT_HOME_AXES                 "Home Axes"
 #define UI_TEXT_EXTR_OFF                  "Turn Off"
@@ -91,20 +90,22 @@
 #define UI_TEXT_LOAD                      "Load Filament"
 #define UI_TEXT_UNLOAD                    "Unload Filament"
 #define UI_TEXT_CLEAN_DRIPTRAY            "Clean Driptray"
-#define UI_TEXT_EXTR_TEMP                 "Extr Temp:%E0\002C"
 #define UI_TEXT_ACTION_PREPARING          "Preparing","","Please Wait...",""
-#define UI_TEXT_ACTION_PREHEAT            "Heating Extruder","%ec/%Ec\002C","","Please Wait..."
 #define UI_TEXT_ACTION_CLEAN_DRIPTRAY     "Remove and Clean","Driptray","",""
 #define UI_TEXT_ACTION_LOAD               "INSERT FILAMENT","UNTIL REACH THE","OTHER END",""
 #define UI_TEXT_ACTION_LOAD_RUN           "FILAMENT IS","LOADING UP NOW","","PLEASE WAIT..."
 #define UI_TEXT_ACTION_LOAD_ASK           "CHECK FILAMENT","OUT FROM NOZZLE?","[BACK] TO RETRY","[OK] TO NEXT"
 #define UI_TEXT_ACTION_UNLOAD             "PULL FILAMENT","OUT AND PRESS","[OK] TO STOP","UNLOADING"
-#endif
+#define UI_PAGE_NOT_COMPATIBLE            "This Feature is","Only Available","On The","Da Vinci 1.0"
 
 #if NUM_EXTRUDER == 1
-#define UI_PAGE_CLEAN_NOZZLE "Clean Nozzle","\005%ec/%Ec\002C","","%os"
+#define UI_PAGE_CLEAN_NOZZLE     "Clean Nozzle","\005%ec/%Ec\002C","","%os"
+#define UI_PAGE_LOAD_FILAMENT    "Load Filament","\005%ec/%Ec\002C","","%os"
+#define UI_PAGE_UNLOAD_FILAMENT    "Unload Filament","\005%ec/%Ec\002C","","%os"
 #else
-#define UI_PAGE_CLEAN_NOZZLE "Clean Nozzle","\005%e0/%E0\002C","\005%e1/%E1\002C","%os"
+#define UI_PAGE_CLEAN_NOZZLE     "Clean Nozzle","\005%e0/%E0\002C","\005%e1/%E1\002C","%os"
+#define UI_PAGE_LOAD_FILAMENT    "Load Filament","\005%e0/%E0\002C","\005%e1/%E1\002C","%os"
+#define UI_PAGE_UNLOAD_FILAMENT    "Unload Filament","\005%e0/%E0\002C","\005%e1/%E1\002C","%os"
 #endif
 
 #define UI_TEXT_HEATING          "Heating..."
@@ -156,10 +157,18 @@
 #define UI_TEXT_Z_POS_FAST       "Z Pos. Fast"
 #define UI_TEXT_E_POSITION       "Extr. position"
 #define UI_TEXT_BED_TEMP         "Bed Temp: %Eb\002C"
+#if NUM_EXTRUDER == 1
+#define UI_TEXT_EXTR0_TEMP       "Temp:     %E0\002C"
+#else
 #define UI_TEXT_EXTR0_TEMP       "Temp. 1:  %E0\002C"
+#endif
 #define UI_TEXT_EXTR1_TEMP       "Temp. 2:  %E1\002C"
 #define UI_TEXT_EXTR2_TEMP       "Temp. 3:  %E2\002C"
+#if NUM_EXTRUDER == 1
+#define UI_TEXT_EXTR0_OFF        "Turn Off"
+#else
 #define UI_TEXT_EXTR0_OFF        "Extruder 1 Off"
+#endif
 #define UI_TEXT_EXTR1_OFF        "Extruder 2 Off"
 #define UI_TEXT_EXTR2_OFF        "Extruder 3 Off"
 #define UI_TEXT_EXTR0_SELECT     "%X0 Select Extr.1"
@@ -1246,9 +1255,7 @@
 #define UI_TEXT_LOAD                      "Charger Filament"
 #define UI_TEXT_UNLOAD                    "Decharg Filament"
 #define UI_TEXT_CLEAN_DRIPTRAY            "Nettoyer Reserv"
-#define UI_TEXT_EXTR_TEMP                 "Temp Extr:%E0\002C"
 #define UI_TEXT_ACTION_PREPARING          "Preparation","Veuillez","Patientez...",""
-#define UI_TEXT_ACTION_PREHEAT            "Chauff Extrudeuse","%ec/%Ec\002C","","Patientez..."
 #define UI_TEXT_ACTION_CLEAN_DRIPTRAY     "Vous Pouvez","Enlenver Et","Nettoyer","Reservoir"
 #define UI_TEXT_ACTION_LOAD               "INSERER LE FIL","ET ATTENDRE QUE","LE FIL SORTE",""
 #define UI_TEXT_ACTION_LOAD_RUN           "LE FIL EST","MAINTENANT","CHARGE","ATTENDRE..."
