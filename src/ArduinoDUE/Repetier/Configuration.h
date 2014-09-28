@@ -432,12 +432,4 @@ Values must be in range 1..255
 #define UI_SET_EXTRUDER_FEEDRATE 2
 #define UI_SET_EXTRUDER_RETRACT_DISTANCE 3
 
-/**
-UI_AUTORETURN_TO_MENU_AFTER must be disabled when using Simple Menu 
-to avoid conflicts with the new menu system.
-*/
-#if SIMPLE_MENU == 1
-#define UI_AUTORETURN_TO_MENU_AFTER 0
-#endif
-
 #endif
