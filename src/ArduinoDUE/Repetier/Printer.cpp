@@ -156,83 +156,56 @@ int debugWaitLoop = 0;
 #endif
 
 #if ENABLE_CLEAN_NOZZLE
-void Printer::cleanNozzle()
-	{
+void Printer::cleanNozzle(bool restoreposition)
+        {
         //ensure homing is done
-	if(!Printer::isHomed()) Printer::homeAxis(true,true,true);
-
+        if(!Printer::isHomed()) Printer::homeAxis(true,true,true);
+  
 	//we save current configuration and position
 	uint8_t tmp_extruderid=Extruder::current->id;
 	float tmp_x = currentPosition[X_AXIS];
 	float tmp_y = currentPosition[Y_AXIS];
 	float tmp_z = currentPosition[Z_AXIS];
-	
+
         Extruder::selectExtruderById(0); //just select E0
      
 	UI_STATUS_UPD_RAM(UI_TEXT_CLEAN_NOZZLE);
         // move Z to zMin + 15 if under this position to be sure nozzle do not touch metal holder
-        if (currentPosition[Z_AXIS] < zMin+15) moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,zMin+15,IGNORE_COORDINATE,homingFeedrate[0]);
+        if (currentPosition[Z_AXIS] < zMin+15) moveToReal(xMin-ENDSTOP_X_BACK_ON_HOME,yMin-ENDSTOP_Y_BACK_ON_HOME,zMin+15,IGNORE_COORDINATE,homingFeedrate[0]);
         Commands::waitUntilEndOfAllMoves();
-       	//set starting position
-	moveToReal(CLEAN_X_START,CLEAN_Y_START,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-        //X-Axis Cleaning
 	//first step
-	moveToReal(CLEAN_X_START + CLEAN_X,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+	moveToReal(xMin-ENDSTOP_X_BACK_ON_HOME+CLEAN_X,yMin-ENDSTOP_Y_BACK_ON_HOME+CLEAN_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
 	//second step
-	moveToReal(CLEAN_X_START,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+	moveToReal(xMin-ENDSTOP_X_BACK_ON_HOME,yMin-ENDSTOP_Y_BACK_ON_HOME,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
 	//third step
-	moveToReal(CLEAN_X_START + CLEAN_X,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+	moveToReal(xMin-ENDSTOP_X_BACK_ON_HOME+CLEAN_X,yMin-ENDSTOP_Y_BACK_ON_HOME+CLEAN_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
 	//fourth step
-	moveToReal(CLEAN_X_START,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-
-        //Y-Axis Cleaning
-        //first step
-	moveToReal(IGNORE_COORDINATE,CLEAN_Y_START + CLEAN_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	//second step
-	moveToReal(IGNORE_COORDINATE,CLEAN_Y_START,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	//third step
-	moveToReal(IGNORE_COORDINATE,CLEAN_Y_START + CLEAN_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	//fourth step
-	moveToReal(IGNORE_COORDINATE,CLEAN_Y_START,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-
-	#if NUM_EXTRUDER==2
-        // Move Y-Axis for Anti-Collision
-        moveToReal(IGNORE_COORDINATE,CLEAN_Y_CLEARANCE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-       	//set starting position
-	moveToReal(CLEAN2_X_START,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	moveToReal(IGNORE_COORDINATE,CLEAN2_Y_START,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+	moveToReal(xMin-ENDSTOP_X_BACK_ON_HOME,yMin-ENDSTOP_Y_BACK_ON_HOME,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+	#if NUM_EXTRUDER == 2
+	//move out to be sure first drop go to purge box
+        moveToReal(xMin+xLength-2,yMin+CLEAN_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+        moveToReal(xMin+xLength-2,yMin-ENDSTOP_Y_BACK_ON_HOME,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
         Commands::waitUntilEndOfAllMoves();
-        //X-Axis Cleaning
         //first step
-        moveToReal(CLEAN2_X_START + CLEAN2_X,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+        moveToReal(xMin+xLength-20,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
         //second step
-        moveToReal(CLEAN2_X_START,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+        moveToReal(xMin+xLength,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
         //third step
-        moveToReal(CLEAN2_X_START + CLEAN2_X,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+        moveToReal(xMin+xLength-20,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
          //fourth step
-        moveToReal(CLEAN2_X_START,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-        
-        //Y-Axis Cleaning
-        //first step
-	moveToReal(IGNORE_COORDINATE,CLEAN2_Y_START + CLEAN2_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	//second step
-	moveToReal(IGNORE_COORDINATE,CLEAN2_Y_START,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	//third step
-	moveToReal(IGNORE_COORDINATE,CLEAN2_Y_START + CLEAN2_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	//fourth step
-	moveToReal(IGNORE_COORDINATE,CLEAN2_Y_START,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-        // Move Y-Axis for Anti-Collision
-        moveToReal(IGNORE_COORDINATE,CLEAN_Y_CLEARANCE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+        moveToReal(xMin+xLength,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
 	#endif
         Commands::waitUntilEndOfAllMoves();
-        //back to original position and original extruder
+	//back to original position and original extruder
         //X,Y first then Z
-	moveToReal(tmp_x,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	moveToReal(IGNORE_COORDINATE,tmp_y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,tmp_z,IGNORE_COORDINATE,homingFeedrate[0]);
-        Commands::waitUntilEndOfAllMoves();
-	Extruder::selectExtruderById(tmp_extruderid);
-	}
+	if (restoreposition)
+                {
+		moveToReal(tmp_x,tmp_y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+		moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,tmp_z,IGNORE_COORDINATE,homingFeedrate[0]);
+		Commands::waitUntilEndOfAllMoves();
+		Extruder::selectExtruderById(tmp_extruderid);
+                }
+        }
 #endif
 
 void Printer::constrainDestinationCoords()

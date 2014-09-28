@@ -228,7 +228,7 @@
 #define ENDSTOP_Y_RETEST_REDUCTION_FACTOR 3
 #define ENDSTOP_Z_RETEST_REDUCTION_FACTOR 4
 #define ENDSTOP_X_BACK_ON_HOME 0
-#define ENDSTOP_Y_BACK_ON_HOME 0
+#define ENDSTOP_Y_BACK_ON_HOME 7
 #define ENDSTOP_Z_BACK_ON_HOME 0
 #define ALWAYS_CHECK_ENDSTOPS 1
 
@@ -248,11 +248,11 @@
 #define Y_HOME_DIR -1
 #define Z_HOME_DIR -1
 //#define X_MAX_LENGTH 235
-#define Y_MAX_LENGTH 217 - ENDSTOP_Y_BACK_ON_HOME
-#define Z_MAX_LENGTH 202 - ENDSTOP_Z_BACK_ON_HOME
-#define X_MIN_POS -30
-#define Y_MIN_POS -15
-#define Z_MIN_POS 0
+#define Y_MAX_LENGTH 217
+#define Z_MAX_LENGTH 202
+#define X_MIN_POS -30 + ENDSTOP_X_BACK_ON_HOME
+#define Y_MIN_POS -15 + ENDSTOP_Y_BACK_ON_HOME
+#define Z_MIN_POS 0 + ENDSTOP_Z_BACK_ON_HOME
 
 // ##########################################################################################
 // ##                           Movement settings                                          ##
@@ -391,29 +391,18 @@ See: AdditionalArduinoFiles: README.txt on how to install them.
 #define UI_DISABLE_AUTO_PAGESWITCH 1
 #define UI_AUTORETURN_TO_MENU_AFTER 30000
 #define UI_AUTOLIGHTOFF_AFTER 1
+
 #define ENABLE_CLEAN_NOZZLE 1
 #if ENABLE_CLEAN_NOZZLE
-    // Set Starting Position for 1st Cleaning (Position of nozzle before the clean starts)
-    #define CLEAN_X_START -30
-    #define CLEAN_Y_START -15
-    // Distance to move to for cleaning the 1st extruder.
-    #if DAVINCI==1     // Da Vinci 1.0
+  #if DAVINCI==1 //cleaner of Davinci 1.0 is not in same position of 2.0
     #define CLEAN_X 20
-    #define CLEAN_Y 20
-    #else              // Da Vinci 2.0
+    #define CLEAN_Y 0
+ #else
     #define CLEAN_X 0
     #define CLEAN_Y 30
-    #endif
-    // Set Starting Position for 2nd Cleaning (Position of nozzle before the clean starts)
-    #define CLEAN2_X_START 167
-    #define CLEAN2_Y_START -15
-    // Distance to move to for cleaning the 2nd extruder.
-    #define CLEAN2_X -30
-    #define CLEAN2_Y 0
-    // On some printers with dual extruders, the Y-Axis can collide when moving to clean the 2nd extruder
-    // Here you can specify how much clearance is needed to avoid the collision.
-    #define CLEAN_Y_CLEARANCE 15
 #endif
+#endif
+
 #define FEATURE_UI_KEYS 0
 #define UI_ENCODER_SPEED 1
 #define UI_KEY_BOUNCETIME 10
