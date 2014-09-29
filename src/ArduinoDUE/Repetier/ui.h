@@ -164,6 +164,7 @@
 #define UI_ACTION_UNLOAD_FILAMENT       1115
 #define UI_ACTION_TOGGLE_POWERSAVE      1116
 #define UI_ACTION_CLEAN_NOZZLE          1117
+#define UI_ACTION_AUTOLEVEL             1118
 
 #define UI_ACTION_MENU_XPOS             4000
 #define UI_ACTION_MENU_YPOS             4001

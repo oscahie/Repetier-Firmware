@@ -420,6 +420,85 @@ void microstepInit()
 
 
 
+#if FEATURE_AUTOLEVEL
+void Commands::AutoLevel(byte S, bool start)
+      {
+        switch (start) 
+        {
+          case true:
+            GCode::executeFString(Com::tZProbeStartScript);
+            //bool iterate = com->hasP() && com->P>0;
+            Printer::coordinateOffset[0] = Printer::coordinateOffset[1] = Printer::coordinateOffset[2] = 0;
+            Printer::setAutolevelActive(false); // iterate
+            float h1,h2,h3,hc,oldFeedrate = Printer::feedrate;
+            Printer::moveTo(EEPROM::zProbeX1(),EEPROM::zProbeY1(),IGNORE_COORDINATE,IGNORE_COORDINATE,EEPROM::zProbeXYSpeed());
+            h1 = Printer::runZProbe(true,false,Z_PROBE_REPETITIONS,false);
+            if(h1<0) break;
+            Printer::moveTo(EEPROM::zProbeX2(),EEPROM::zProbeY2(),IGNORE_COORDINATE,IGNORE_COORDINATE,EEPROM::zProbeXYSpeed());
+            h2 = Printer::runZProbe(false,false);
+            if(h2<0) break;
+            Printer::moveTo(EEPROM::zProbeX3(),EEPROM::zProbeY3(),IGNORE_COORDINATE,IGNORE_COORDINATE,EEPROM::zProbeXYSpeed());
+            h3 = Printer::runZProbe(false,true);
+            if(h3<0) break;
+            Printer::buildTransformationMatrix(h1,h2,h3);
+            //-(Rxx*Ryz*y-Rxz*Ryx*y+(Rxz*Ryy-Rxy*Ryz)*x)/(Rxy*Ryx-Rxx*Ryy)
+            // z = z-deviation from origin due to bed transformation
+            float z = -((Printer::autolevelTransformation[0]*Printer::autolevelTransformation[5]-
+                         Printer::autolevelTransformation[2]*Printer::autolevelTransformation[3])*
+                        (float)Printer::currentPositionSteps[Y_AXIS]*Printer::invAxisStepsPerMM[Y_AXIS]+
+                        (Printer::autolevelTransformation[2]*Printer::autolevelTransformation[4]-
+                         Printer::autolevelTransformation[1]*Printer::autolevelTransformation[5])*
+                        (float)Printer::currentPositionSteps[X_AXIS]*Printer::invAxisStepsPerMM[X_AXIS])/
+                      (Printer::autolevelTransformation[1]*Printer::autolevelTransformation[3]-Printer::autolevelTransformation[0]*Printer::autolevelTransformation[4]);
+#ifdef ZPROBE_ADJUST_ZMIN
+            Com::printFLN("Old zMin:", Printer::zMin);
+            Com::printFLN("Z : ", z);
+            Com::printFLN("h3 : ", h3);
+            Com::printFLN("bed : ", (float)EEPROM::zProbeBedDistance());
+            Printer::zMin = z + h3 - EEPROM::zProbeBedDistance();
+            Com::printFLN("New zMin:", Printer::zMin);
+#else
+            Printer::zMin = 0;
+#endif
+            if(S > 0)
+            {
+#if MAX_HARDWARE_ENDSTOP_Z
+#if DRIVE_SYSTEM==3
+                /* Printer::offsetX = 0;
+                 Printer::offsetY = 0;
+                 Printer::moveToReal(0,0,cz,IGNORE_COORDINATE,Printer::homingFeedrate[X_AXIS]);
+                     PrintLine::moveRelativeDistanceInSteps(Printer::offsetX-Printer::currentPositionSteps[0],Printer::offsetY-Printer::currentPositionSteps[1],0,0,Printer::homingFeedrate[0],true,ALWAYS_CHECK_ENDSTOPS);
+                     Printer::offsetX = 0;
+                     Printer::offsetY = 0;*/
+                Printer::zLength += (h3+z)-Printer::currentPosition[Z_AXIS];
+#else
+                int32_t zBottom = Printer::currentPositionSteps[Z_AXIS] = (h3+z)*Printer::axisStepsPerMM[Z_AXIS];
+                Printer::zLength = Printer::runZMaxProbe()+zBottom*Printer::invAxisStepsPerMM[2]-ENDSTOP_Z_BACK_ON_HOME;
+#endif
+                Com::printFLN(Com::tZProbePrinterHeight,Printer::zLength);
+#else
+#if DRIVE_SYSTEM!=3
+                Printer::currentPositionSteps[Z_AXIS] = (h3+z)*Printer::axisStepsPerMM[Z_AXIS];
+#endif
+#endif
+                Printer::setAutolevelActive(true);
+                if(S == 2)
+                    EEPROM::storeDataIntoEEPROM();
+            }
+            Printer::setAutolevelActive(true);
+            Printer::updateDerivedParameter();
+            Printer::updateCurrentPosition(true);
+            printCurrentPosition();
+#if DRIVE_SYSTEM==3
+            Printer::homeAxis(true,true,true);
+#endif
+            Printer::feedrate = oldFeedrate;
+          }
+        }
+#endif
+
+
+
 /**
   \brief Execute the command stored in com.
 */

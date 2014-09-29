@@ -2934,7 +2934,7 @@ void UIDisplay::executeAction(int action)
                           pushMenu((void*)&ui_menu_load,true);
                           isMenuLoaded = true;
                         }
-                        if (digitalRead(FIL_SENSOR_PIN) == LOW) // Wait for Filament Insertion
+                        if (!(READ(FIL_SENSOR_PIN))) // Wait for Filament Insertion
                         {
                           isMenuLoaded = false;
                           step = STEP_LOAD_FILAMENT;
@@ -3120,6 +3120,146 @@ void UIDisplay::executeAction(int action)
 		#if NUM_EXTRUDER>1
                 Extruder::setTemperatureForExtruder(0,1);
 		#endif
+                isMenuLoaded = false;
+		menuLevel=0;
+		refreshPage();
+        break;
+#endif
+#if SIMPLE_MENU == 1
+        case UI_ACTION_AUTOLEVEL:
+#if NUM_EXTRUDER > 1
+        pushMenu((void*)&ui_menu_not_compatible,true);
+        break;
+#endif
+            //be sure no issue
+		if(reportTempsensorError()) break;
+		pushMenu((void*)&ui_menu_autolevel_page,true);
+		process_it=true;
+		printedTime = HAL::timeInMilliseconds();
+		step=STEP_HEATING;
+		while (process_it)
+		{
+		Commands::checkForPeriodicalActions();
+		currentTime = HAL::timeInMilliseconds();
+        if( (currentTime - printedTime) > 1000 )   //Print Temp Reading every 1 second while heating up.
+            {
+              Commands::printTemperatures();
+              printedTime = currentTime;
+            }
+		 //be sure not auto return
+		#if UI_AUTORETURN_TO_MENU_AFTER!=0
+                ui_autoreturn_time=HAL::timeInMilliseconds()+UI_AUTORETURN_TO_MENU_AFTER +60000; // Increased to allow for extra time for lengthy code.
+		#endif
+		 switch(step)
+		 {
+		 case  STEP_HEATING:
+                        Extruder::setTemperatureForExtruder(UI_SET_PRESET_EXTRUDER_TEMP_ABS,0);
+                  #if HAVE_HEATED_BED==true
+                        Extruder::setHeatedBedTemperature(UI_SET_PRESET_HEATED_BED_TEMP_ABS);
+                  #endif
+                        Printer::homeAxis(true,true,true);
+                        Printer::moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,Printer::zMin+10,IGNORE_COORDINATE,Printer::homingFeedrate[0]);
+                        Commands::waitUntilEndOfAllMoves();
+                        Commands::printCurrentPosition();
+			step = STEP_WAIT_FOR_TEMPERATURE;
+		 break;
+		 case STEP_WAIT_FOR_TEMPERATURE:
+			UI_STATUS(UI_TEXT_HEATING);
+
+			//no need to be extremly accurate so no need stable temperature 
+			if(abs(extruder[0].tempControl.currentTemperatureC- extruder[0].tempControl.targetTemperatureC)<2)
+				{
+				step = STEP_AUTOLEVEL;
+				}
+
+                        #if HAVE_HEATED_BED==true
+//                        float tmpBedTemp = Extruder::getHeatedBedTemperature();
+			if(!((abs(heatedBedController.currentTemperatureC- heatedBedController.targetTemperatureC)<2) && (step == STEP_AUTOLEVEL)))
+				{
+				step = STEP_WAIT_FOR_TEMPERATURE;
+				}
+			#endif
+		 break;
+		 case STEP_AUTOLEVEL:
+
+                     // Clean Nozzle
+                        Printer::cleanNozzle(true);
+			Commands::waitUntilEndOfAllMoves();
+
+                     // Update Status
+                        UI_STATUS(UI_TEXT_PLEASE_WAIT);
+
+                     // Start Autolevel Process
+                        Commands::AutoLevel('2');
+
+                        step = STEP_WAIT_FOR_OK;
+		 break;
+		 case STEP_WAIT_FOR_OK:
+                      UI_STATUS(UI_TEXT_WAIT_FOR_OK);
+                      //cool down
+                      Extruder::setTemperatureForExtruder(0,0);
+                      #if NUM_EXTRUDER>1
+                      Extruder::setTemperatureForExtruder(0,1);
+                      #endif
+
+                      #if HAVE_HEATED_BED==true
+                      Extruder::setHeatedBedTemperature(0);
+                      #endif
+                      
+		 //just need to wait for key to be pressed
+		 break;
+		 }
+		 //check what key is pressed
+		 if (previousaction!=lastButtonAction)
+			{
+			previousaction=lastButtonAction;
+			if(previousaction!=0)BEEP_SHORT;
+			 if ((lastButtonAction==UI_ACTION_OK) &&(step==STEP_WAIT_FOR_OK))
+				{//we are done
+				process_it=false;
+				UI_STATUS(UI_TEXT_COOLDOWN);
+				}
+			 if ((lastButtonAction==UI_ACTION_BACK) &&(step==STEP_WAIT_FOR_TEMPERATURE))//this means user want to cancel current action
+				{
+				if (confirmationDialog(UI_TEXT_PLEASE_CONFIRM ,UI_TEXT_CANCEL_ACTION,UI_TEXT_AUTOLEVEL))
+					{
+					UI_STATUS(UI_TEXT_CANCELED);
+					process_it=false;
+					}
+				else
+					{//we continue as before
+					menuLevel--;
+					pushMenu((void*)&ui_menu_autolevel_page,true);
+					}
+				delay(100);
+				}
+			 //wake up light if power saving has been launched
+			#if UI_AUTOLIGHTOFF_AFTER!=0
+			if (timepowersaving>0)
+				{
+				ui_autolightoff_time=HAL::timeInMilliseconds()+timepowersaving;
+				#if CASE_LIGHTS_PIN > 0
+				if (!(READ(CASE_LIGHTS_PIN)) && buselight)
+					{
+					TOGGLE(CASE_LIGHTS_PIN);
+					}
+				#endif
+				#if defined(UI_BACKLIGHT_PIN)
+				if (!(READ(UI_BACKLIGHT_PIN))) WRITE(UI_BACKLIGHT_PIN, HIGH);
+				#endif
+				}
+			#endif
+			}
+		}
+		//cool down
+		Extruder::setTemperatureForExtruder(0,0);
+		#if NUM_EXTRUDER>1
+                      Extruder::setTemperatureForExtruder(0,1);
+		#endif
+                #if HAVE_HEATED_BED==true
+                      Extruder::setHeatedBedTemperature(0);
+                #endif
+                
                 isMenuLoaded = false;
 		menuLevel=0;
 		refreshPage();

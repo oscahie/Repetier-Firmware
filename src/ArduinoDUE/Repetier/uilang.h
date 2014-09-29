@@ -90,6 +90,8 @@
 #define UI_TEXT_LOAD                      "Load Filament"
 #define UI_TEXT_UNLOAD                    "Unload Filament"
 #define UI_TEXT_CLEAN_DRIPTRAY            "Clean Driptray"
+#define UI_TEXT_AUTOLEVEL                 "Calibration"
+#define UI_TEXT_PLEASE_WAIT               "Please Wait..."
 #define UI_TEXT_ACTION_PREPARING          "Preparing","","Please Wait...",""
 #define UI_TEXT_ACTION_CLEAN_DRIPTRAY     "Remove and Clean","Driptray","",""
 #define UI_TEXT_ACTION_LOAD               "INSERT FILAMENT","UNTIL REACH THE","OTHER END",""
@@ -99,17 +101,19 @@
 #define UI_PAGE_NOT_COMPATIBLE            "This Feature is","Only Available","On The","Da Vinci 1.0"
 
 #if NUM_EXTRUDER == 1
-#define UI_PAGE_CLEAN_NOZZLE     "Clean Nozzle","\005%ec/%Ec\002C","","%os"
-#define UI_PAGE_LOAD_FILAMENT    "Load Filament","\005%ec/%Ec\002C","","%os"
+#define UI_PAGE_CLEAN_NOZZLE       "Clean Nozzle","\005%ec/%Ec\002C","","%os"
+#define UI_PAGE_LOAD_FILAMENT      "Load Filament","\005%ec/%Ec\002C","","%os"
 #define UI_PAGE_UNLOAD_FILAMENT    "Unload Filament","\005%ec/%Ec\002C","","%os"
+#define UI_PAGE_AUTOLEVEL          "Calibration","\005:%ec/%Ec\002C","\007:%eB/%Eb\002C","%os"
 #else
-#define UI_PAGE_CLEAN_NOZZLE     "Clean Nozzle","\005%e0/%E0\002C","\005%e1/%E1\002C","%os"
-#define UI_PAGE_LOAD_FILAMENT    "Load Filament","\005%e0/%E0\002C","\005%e1/%E1\002C","%os"
+#define UI_PAGE_CLEAN_NOZZLE       "Clean Nozzle","\005%e0/%E0\002C","\005%e1/%E1\002C","%os"
+#define UI_PAGE_LOAD_FILAMENT      "Load Filament","\005%e0/%E0\002C","\005%e1/%E1\002C","%os"
 #define UI_PAGE_UNLOAD_FILAMENT    "Unload Filament","\005%e0/%E0\002C","\005%e1/%E1\002C","%os"
+#define UI_PAGE_AUTOLEVEL          "\005%e0/%E0\002C","\005%e1/%E1\002C","\007:%eB/%Eb\002C","%os"
 #endif
 
 #define UI_TEXT_HEATING          "Heating..."
-#define UI_TEXT_WAIT_FOR_OK      "Press OK to End"
+#define UI_TEXT_WAIT_FOR_OK      "Press OK to Exit"
 #define UI_TEXT_CONFIRMATION     "Please Confirm","%C2","%C3","%C4"
 #define UI_TEXT_YES_SELECTED     "  [Yes]    No"
 #define UI_TEXT_NO_SELECTED      "   Yes    [No]"

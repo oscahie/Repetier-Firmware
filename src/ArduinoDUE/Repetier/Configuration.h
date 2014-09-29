@@ -359,7 +359,7 @@ See: AdditionalArduinoFiles: README.txt on how to install them.
 #define Z_PROBE_Y_OFFSET 0
 #define Z_PROBE_WAIT_BEFORE_TEST 0
 #define Z_PROBE_SPEED 1
-#define Z_PROBE_XY_SPEED 100
+#define Z_PROBE_XY_SPEED 80
 #define Z_PROBE_SWITCHING_DISTANCE 1
 #define Z_PROBE_REPETITIONS 1
 #define Z_PROBE_HEIGHT 0.28
