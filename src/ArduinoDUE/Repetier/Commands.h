@@ -29,7 +29,7 @@ class Commands
 public:
     static void commandLoop();
     static void checkForPeriodicalActions();
-    static void AutoLevel(byte S = 0, bool start = true);
+    static void AutoLevel(int S = 0,bool start = true);
     static void executeGCode(GCode *com);
     static void waitUntilEndOfAllMoves();
     static void waitUntilEndOfAllBuffers();

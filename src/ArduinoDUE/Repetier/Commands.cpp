@@ -421,7 +421,7 @@ void microstepInit()
 
 
 #if FEATURE_AUTOLEVEL
-void Commands::AutoLevel(byte S, bool start)
+void Commands::AutoLevel(int S,bool start)
       {
         switch (start) 
         {
