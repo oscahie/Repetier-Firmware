@@ -3204,7 +3204,7 @@ void UIDisplay::executeAction(int action)
                         UI_STATUS(UI_TEXT_PLEASE_WAIT);
 
                      // Start Autolevel Process
-                        Commands::AutoLevel('2');
+                        Commands::AutoLevel(2);
 
                         step = STEP_WAIT_FOR_OK;
 		 break;
