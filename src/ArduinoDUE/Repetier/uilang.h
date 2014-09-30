@@ -91,6 +91,7 @@
 #define UI_TEXT_UNLOAD                    "Unload Filament"
 #define UI_TEXT_CLEAN_DRIPTRAY            "Clean Driptray"
 #define UI_TEXT_AUTOLEVEL                 "Calibration"
+#define UI_TEXT_SOUND_ONOF                "Sound :%so"
 #define UI_TEXT_PLEASE_WAIT               "Please Wait..."
 #define UI_TEXT_ACTION_PREPARING          "Preparing","","Please Wait...",""
 #define UI_TEXT_ACTION_CLEAN_DRIPTRAY     "Remove and Clean","Driptray","",""
