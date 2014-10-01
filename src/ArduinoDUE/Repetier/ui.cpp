@@ -3298,8 +3298,9 @@ void UIDisplay::executeAction(int action)
             disable_buttons = true;
             pushMenu((void*)&ui_menu_preparing,false);
             Printer::homeAxis(true,true,true);
-            PrintLine::moveRelativeDistanceInStepsReal(0,Printer::axisStepsPerMM[1]*200,0,0,Printer::homingFeedrate[1],false);
-            PrintLine::moveRelativeDistanceInStepsReal(0,0,Printer::axisStepsPerMM[2]*100,0,Printer::homingFeedrate[2],true);
+            PrintLine::moveRelativeDistanceInStepsReal(0,0,Printer::axisStepsPerMM[2]*15,0,Printer::homingFeedrate[2],true);
+            PrintLine::moveRelativeDistanceInStepsReal(Printer::axisStepsPerMM[1]*(X_MAX_LENGTH - ENDSTOP_X_BACK_ON_HOME - 20),Printer::axisStepsPerMM[1]*(Y_MAX_LENGTH - ENDSTOP_Y_BACK_ON_HOME - 20),0,0,Printer::homingFeedrate[1],false);
+            PrintLine::moveRelativeDistanceInStepsReal(0,0,Printer::axisStepsPerMM[2]*75,0,Printer::homingFeedrate[2],true);
             Commands::printCurrentPosition();
             menuLevel = 1;
             pushMenu((void*)&ui_menu_clean_driptray,false);
