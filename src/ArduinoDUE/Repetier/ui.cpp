@@ -51,12 +51,6 @@ bool enablesound = true;
 millis_t ui_autolightoff_time=-1;
 #endif
 
-#if CASE_LIGHT_DEFAULT_ON
-bool buselight=true; 
-#else
-bool buselight=false; 
-#endif
-
 #if UI_AUTOLIGHTOFF_AFTER !=0
 long timepowersaving=1000 * 60 * 30; //30 min
 #else
@@ -2572,7 +2566,7 @@ while (process_it)
 			{
 			ui_autolightoff_time=HAL::timeInMilliseconds()+timepowersaving;
 			#if CASE_LIGHTS_PIN > 0
-			if (!(READ(CASE_LIGHTS_PIN)) && buselight)
+			if (!(READ(CASE_LIGHTS_PIN)) && Printer::buselight)
 				{
 				TOGGLE(CASE_LIGHTS_PIN);
 				}
@@ -2622,7 +2616,7 @@ void UIDisplay::executeAction(int action)
 	{
 	ui_autolightoff_time=HAL::timeInMilliseconds()+timepowersaving;
 	#if CASE_LIGHTS_PIN > 0
-	if (!(READ(CASE_LIGHTS_PIN)) && buselight)
+	if (!(READ(CASE_LIGHTS_PIN)) && Printer::buselight)
 		{
 		TOGGLE(CASE_LIGHTS_PIN);
 		}
@@ -2785,9 +2779,9 @@ void UIDisplay::executeAction(int action)
         case UI_ACTION_LIGHTS_ONOFF:
             TOGGLE(CASE_LIGHTS_PIN);
                         if (READ(CASE_LIGHTS_PIN))
-			buselight=true;
+			Printer::buselight=true;
 			else
-			buselight=false;
+			Printer::buselight=false;
             UI_STATUS(UI_TEXT_LIGHTS_ONOFF);
             break;
 #endif
@@ -2879,7 +2873,7 @@ void UIDisplay::executeAction(int action)
 				{
 				ui_autolightoff_time=HAL::timeInMilliseconds()+timepowersaving;
 				#if CASE_LIGHTS_PIN > 0
-				if (!(READ(CASE_LIGHTS_PIN)) && buselight)
+				if (!(READ(CASE_LIGHTS_PIN)) && Printer::buselight)
 					{
 					TOGGLE(CASE_LIGHTS_PIN);
 					}
@@ -3008,7 +3002,7 @@ void UIDisplay::executeAction(int action)
 				{
 				ui_autolightoff_time=HAL::timeInMilliseconds()+timepowersaving;
 				#if CASE_LIGHTS_PIN > 0
-				if (!(READ(CASE_LIGHTS_PIN)) && buselight)
+				if (!(READ(CASE_LIGHTS_PIN)) && Printer::buselight)
 					{
 					TOGGLE(CASE_LIGHTS_PIN);
 					}
@@ -3117,7 +3111,7 @@ void UIDisplay::executeAction(int action)
 				{
 				ui_autolightoff_time=HAL::timeInMilliseconds()+timepowersaving;
 				#if CASE_LIGHTS_PIN > 0
-				if (!(READ(CASE_LIGHTS_PIN)) && buselight)
+				if (!(READ(CASE_LIGHTS_PIN)) && Printer::buselight)
 					{
 					TOGGLE(CASE_LIGHTS_PIN);
 					}
@@ -3253,7 +3247,7 @@ void UIDisplay::executeAction(int action)
 				{
 				ui_autolightoff_time=HAL::timeInMilliseconds()+timepowersaving;
 				#if CASE_LIGHTS_PIN > 0
-				if (!(READ(CASE_LIGHTS_PIN)) && buselight)
+				if (!(READ(CASE_LIGHTS_PIN)) && Printer::buselight)
 					{
 					TOGGLE(CASE_LIGHTS_PIN);
 					}
@@ -3787,7 +3781,7 @@ if (ui_autolightoff_time==-1) ui_autolightoff_time=HAL::timeInMilliseconds()+tim
 if ((ui_autolightoff_time<time) && (timepowersaving>0))
     {
 	#if CASE_LIGHTS_PIN > 0
-	if ((READ(CASE_LIGHTS_PIN)) && buselight)
+	if ((READ(CASE_LIGHTS_PIN)) && Printer::buselight)
 		{
 		TOGGLE(CASE_LIGHTS_PIN);
 		}
