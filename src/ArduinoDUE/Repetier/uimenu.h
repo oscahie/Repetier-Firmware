@@ -274,17 +274,32 @@ UI_MENU_ACTIONSELECTOR(ui_menu_go_zfast,UI_TEXT_Z_POSITION,ui_menu_zpos_fast);
 #define UI_MENU_POSITIONS {UI_MENU_ADDCONDBACK &ui_menu_home_all UI_SPEED_X UI_SPEED_Y UI_SPEED_Z}
 UI_MENU(ui_menu_positions,UI_MENU_POSITIONS,1 + 3 * UI_SPEED + UI_MENU_BACKCNT);
 
-// **** Maintenance submenus
+// **** Maintenance Background Menus
 
+// Background Menus
+UI_MENU_ACTION4C(ui_menu_confirmation,UI_ACTION_DUMMY,UI_TEXT_CONFIRMATION);
+UI_MENU_ACTION4C(ui_menu_clean_nozzle_page,UI_ACTION_DUMMY,UI_PAGE_CLEAN_NOZZLE);
+UI_MENU_ACTION4C(ui_menu_load_filament_page,UI_ACTION_DUMMY,UI_PAGE_LOAD_FILAMENT);
+UI_MENU_ACTION4C(ui_menu_unload_filament_page,UI_ACTION_DUMMY,UI_PAGE_UNLOAD_FILAMENT);
+UI_MENU_ACTION4C(ui_menu_autolevel_page,UI_ACTION_DUMMY,UI_PAGE_AUTOLEVEL);
+UI_MENU_ACTION4C(ui_menu_not_compatible,UI_ACTION_DUMMY,UI_PAGE_NOT_COMPATIBLE);
+#define STEP_HEATING 1
+#define STEP_WAIT_FOR_TEMPERATURE 2
+#define STEP_CLEAN_NOOZLE 3
+#define STEP_WAIT_FOR_OK 4
+#define STEP_WAIT_FOR_FILAMENT 5
+#define STEP_LOAD_FILAMENT 6
+#define STEP_AUTOLEVEL 7
+
+// Load Filament
 UI_MENU_ACTION4C(ui_menu_load,UI_ACTION_DUMMY,UI_TEXT_ACTION_LOAD);
 UI_MENU_ACTION4C(ui_menu_load_run,UI_ACTION_DUMMY,UI_TEXT_ACTION_LOAD_RUN);
 UI_MENU_ACTION4C(ui_menu_load_ask,UI_ACTION_DUMMY,UI_TEXT_ACTION_LOAD_ASK);
-
+// Unload & Clean Driptray
 UI_MENU_ACTION4C(ui_menu_unload,UI_ACTION_DUMMY,UI_TEXT_ACTION_UNLOAD);
-UI_MENU_ACTION4C(ui_menu_preheat,UI_ACTION_DUMMY,UI_TEXT_ACTION_PREHEAT);
-UI_MENU_ACTION4C(ui_menu_preparing,UI_ACTION_DUMMY,UI_TEXT_ACTION_PREPARING);
-UI_MENU_ACTION4C(ui_menu_clean_extr,UI_ACTION_DUMMY,UI_TEXT_ACTION_CLEAN_EXTR);
 UI_MENU_ACTION4C(ui_menu_clean_driptray,UI_ACTION_DUMMY,UI_TEXT_ACTION_CLEAN_DRIPTRAY);
+// General
+UI_MENU_ACTION4C(ui_menu_preparing,UI_ACTION_DUMMY,UI_TEXT_ACTION_PREPARING);
 
 /*
 Next step is to define submenus leading to the action.
@@ -292,13 +307,23 @@ Next step is to define submenus leading to the action.
 
 // **** Maintenance menu
 
-UI_MENU_ACTIONCOMMAND_FILTER(ui_menu_go_load,UI_TEXT_LOAD,UI_ACTION_LOAD,0,MENU_MODE_PRINTING);
-UI_MENU_ACTIONCOMMAND_FILTER(ui_menu_go_unload,UI_TEXT_UNLOAD,UI_ACTION_UNLOAD,0,MENU_MODE_PRINTING);
-UI_MENU_ACTIONCOMMAND_FILTER(ui_menu_go_clean_extr,UI_TEXT_CLEAN_EXTR,UI_ACTION_CLEAN_EXTR,0,MENU_MODE_PRINTING);
-UI_MENU_ACTIONCOMMAND_FILTER(ui_menu_go_clean_driptray,UI_TEXT_CLEAN_DRIPTRAY,UI_ACTION_CLEAN_DRIPTRAY,0,MENU_MODE_PRINTING);
+//Clean Nozzle
+#if ENABLE_CLEAN_NOZZLE == 1
+UI_MENU_ACTIONCOMMAND_FILTER(ui_menu_clean_nozzle,UI_TEXT_CLEAN_NOZZLE,UI_ACTION_CLEAN_NOZZLE,0,MENU_MODE_PRINTING);
+#define UI_CLEAN_NOZZLE_ENTRY ,&ui_menu_clean_nozzle
+#define UI_CLEAN_NOZZLE_COUNT 1
+#else
+#define UI_CLEAN_NOZZLE_ENTRY 
+#define UI_CLEAN_NOZZLE_COUNT 0
+#endif
 
-#define UI_MENU_MAINTENANCE {UI_MENU_ADDCONDBACK &ui_menu_go_load,&ui_menu_go_unload,&ui_menu_go_clean_extr,&ui_menu_go_clean_driptray}
-UI_MENU(ui_menu_maintenance,UI_MENU_MAINTENANCE,UI_MENU_BACKCNT + 4);
+UI_MENU_ACTIONCOMMAND_FILTER(ui_menu_go_load,UI_TEXT_LOAD,UI_ACTION_LOAD_FILAMENT,0,MENU_MODE_PRINTING);
+UI_MENU_ACTIONCOMMAND_FILTER(ui_menu_go_unload,UI_TEXT_UNLOAD,UI_ACTION_UNLOAD_FILAMENT,0,MENU_MODE_PRINTING);
+UI_MENU_ACTIONCOMMAND_FILTER(ui_menu_go_clean_driptray,UI_TEXT_CLEAN_DRIPTRAY,UI_ACTION_CLEAN_DRIPTRAY,0,MENU_MODE_PRINTING);
+UI_MENU_ACTIONCOMMAND_FILTER(ui_menu_go_autolevel,UI_TEXT_AUTOLEVEL,UI_ACTION_AUTOLEVEL,0,MENU_MODE_PRINTING);
+
+#define UI_MENU_MAINTENANCE {UI_MENU_ADDCONDBACK &ui_menu_go_load,&ui_menu_go_unload UI_CLEAN_NOZZLE_ENTRY,&ui_menu_go_clean_driptray,&ui_menu_go_autolevel}
+UI_MENU(ui_menu_maintenance,UI_MENU_MAINTENANCE,UI_MENU_BACKCNT + UI_CLEAN_NOZZLE_COUNT + 4);
 
 // **** Bed leveling menu
 #ifdef SOFTWARE_LEVELING
@@ -356,15 +381,14 @@ UI_MENU_ACTIONCOMMAND(ui_menu_powersave,UI_TEXT_POWER_SAVE,UI_ACTION_TOGGLE_POWE
 #define UI_POWER_SAVE_COUNT 0
 #endif
 
-//Clean Nozzle
-#if ENABLE_CLEAN_NOZZLE == 1
-UI_MENU_ACTIONCOMMAND(ui_menu_clean_nozzle,UI_TEXT_CLEAN_NOZZLE,UI_ACTION_CLEAN_NOZZLE);
-#define UI_CLEAN_NOZZLE_ENTRY ,&ui_menu_clean_nozzle
-#define UI_CLEAN_NOZZLE_COUNT 1
+#if FEATURE_BEEPER
+UI_MENU_ACTIONCOMMAND(ui_menu_sound,UI_TEXT_SOUND_ONOF,UI_ACTION_SOUND);
+#define UI_SOUND_ENTRY ,&ui_menu_sound
+#define UI_SOUND_COUNT 1
 #else
-#define UI_CLEAN_NOZZLE_ENTRY 
-#define UI_CLEAN_NOZZLE_COUNT 0
-#endif
+#define UI_SOUND_ENTRY 
+#define UI_SOUND_COUNT 0
+#endif 
 
 // **** Quick menu
 UI_MENU_ACTIONCOMMAND(ui_menu_toggle_light,UI_TEXT_LIGHTS_ONOFF,UI_ACTION_LIGHTS_ONOFF);
@@ -392,8 +416,8 @@ UI_MENU_ACTIONCOMMAND(ui_menu_quick_debug,"Write Debug",UI_ACTION_WRITE_DEBUG);
 #define DEBUG_PRINT_EXTRA
 #endif
 
-#define UI_MENU_QUICK {UI_MENU_ADDCONDBACK &ui_menu_home_all BABY_ENTRY ,&ui_menu_quick_speedmultiply,&ui_menu_quick_flowmultiply,&ui_menu_toggle_light UI_POWER_SAVE_ENTRY UI_CLEAN_NOZZLE_ENTRY,&ui_menu_quick_preheat_pla,&ui_menu_quick_preheat_abs,&ui_menu_quick_cooldown,&ui_menu_quick_stopstepper DEBUG_PRINT_EXTRA}
-UI_MENU(ui_menu_quick,UI_MENU_QUICK,UI_MENU_BACKCNT+BABY_CNT+DEBUG_PRINT_COUNT+UI_POWER_SAVE_COUNT+UI_CLEAN_NOZZLE_COUNT+8);
+#define UI_MENU_QUICK {UI_MENU_ADDCONDBACK &ui_menu_home_all BABY_ENTRY ,&ui_menu_quick_speedmultiply,&ui_menu_quick_flowmultiply,&ui_menu_toggle_light UI_SOUND_ENTRY UI_POWER_SAVE_ENTRY,&ui_menu_quick_preheat_pla,&ui_menu_quick_preheat_abs,&ui_menu_quick_cooldown,&ui_menu_quick_stopstepper DEBUG_PRINT_EXTRA}
+UI_MENU(ui_menu_quick,UI_MENU_QUICK,UI_MENU_BACKCNT+BABY_CNT+DEBUG_PRINT_COUNT+UI_SOUND_COUNT+UI_POWER_SAVE_COUNT+8);
 
 // **** Fan menu
 

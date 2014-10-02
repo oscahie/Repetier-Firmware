@@ -37,6 +37,10 @@
 #include "pins.h"
 #include "Print.h"
 
+#if FEATURE_BEEPER
+extern bool enablesound;
+#endif
+
 // Hack to make 84 MHz Due clock work without changes to pre-existing code
 // which would otherwise have problems with int overflow.
 #define F_CPU       21000000        // should be factor of F_CPU_TRUE
@@ -128,7 +132,7 @@ typedef char prog_char;
 #define PULLUP(IO,v)            {pinMode(IO, (v!=LOW ? INPUT_PULLUP : INPUT)); }
 
 // INTERVAL / (32Khz/128)  = seconds
-#define WATCHDOG_INTERVAL       512u  // 2sec  (~16 seconds max)
+#define WATCHDOG_INTERVAL       250  // 1 sec  (~16 seconds max)
 
 
 
@@ -151,9 +155,9 @@ typedef char prog_char;
 #define LOW         0
 #define HIGH        1
 
-#define BEGIN_INTERRUPT_PROTECTED {uint32_t oldInt = __get_PRIMASK();__disable_irq();
-#define END_INTERRUPT_PROTECTED __set_PRIMASK(oldInt);} //__enable_irq();
-#define ESCAPE_INTERRUPT_PROTECTED  __set_PRIMASK(oldInt);//__enable_irq();
+#define BEGIN_INTERRUPT_PROTECTED __disable_irq(); //noInterrupts();
+#define END_INTERRUPT_PROTECTED __enable_irq(); //interrupts();
+#define ESCAPE_INTERRUPT_PROTECTED  __enable_irq(); //interrupts();
 
 #define EEPROM_OFFSET               0
 #define SECONDS_TO_TICKS(s) (unsigned long)(s*(float)F_CPU)
@@ -293,6 +297,10 @@ public:
     static inline void tone(uint8_t pin,int frequency) {
 // set up timer counter 1 channel 0 to generate interrupts for
         // toggling output pin.  
+        
+#if FEATURE_BEEPER
+          if (!enablesound)return;
+#endif
         SET_OUTPUT(pin);
         tone_pin = pin;
         pmc_set_writeprotect(false);
@@ -429,11 +437,11 @@ public:
 
     static inline void allowInterrupts()
     {
-        __enable_irq();
+//        __enable_irq();
     }
     static inline void forbidInterrupts()
     {
-        __disable_irq();
+//        __disable_irq();
     }
     static inline unsigned long timeInMilliseconds()
     {
@@ -595,9 +603,9 @@ public:
 
 
     // Watchdog support
-    inline static void startWatchdog() {  WDT->WDT_MR = WDT_MR_WDRSTEN | WATCHDOG_INTERVAL | (WATCHDOG_INTERVAL << 16);WDT->WDT_CR = 0xA5000001;};
+    inline static void startWatchdog() { WDT_Enable(WDT, WDT_MR_WDRSTEN | WATCHDOG_INTERVAL );};
     inline static void stopWatchdog() {}
-    inline static void pingWatchdog() {WDT->WDT_CR = 0xA5000001;};
+    inline static void pingWatchdog() {WDT_Restart(WDT);};
 
     inline static float maxExtruderTimerFrequency() {return (float)F_CPU/TIMER0_PRESCALE;}
 #if FEATURE_SERVO

@@ -57,6 +57,7 @@ uint8_t Printer::flag1 = 0;
 uint8_t Printer::debugLevel = 6; ///< Bitfield defining debug output. 1 = echo, 2 = info, 4 = error, 8 = dry run., 16 = Only communication, 32 = No moves
 uint8_t Printer::stepsPerTimerCall = 1;
 uint8_t Printer::menuMode = 0;
+bool Printer::buselight=false;
 
 #if FEATURE_AUTOLEVEL
 float Printer::autolevelTransformation[9]; ///< Transformation matrix
@@ -156,83 +157,56 @@ int debugWaitLoop = 0;
 #endif
 
 #if ENABLE_CLEAN_NOZZLE
-void Printer::cleanNozzle()
-	{
+void Printer::cleanNozzle(bool restoreposition)
+        {
         //ensure homing is done
-	if(!Printer::isHomed()) Printer::homeAxis(true,true,true);
-
+        if(!Printer::isHomed()) Printer::homeAxis(true,true,true);
+  
 	//we save current configuration and position
 	uint8_t tmp_extruderid=Extruder::current->id;
 	float tmp_x = currentPosition[X_AXIS];
 	float tmp_y = currentPosition[Y_AXIS];
 	float tmp_z = currentPosition[Z_AXIS];
-	
+
         Extruder::selectExtruderById(0); //just select E0
      
 	UI_STATUS_UPD_RAM(UI_TEXT_CLEAN_NOZZLE);
         // move Z to zMin + 15 if under this position to be sure nozzle do not touch metal holder
-        if (currentPosition[Z_AXIS] < zMin+15) moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,zMin+15,IGNORE_COORDINATE,homingFeedrate[0]);
+        if (currentPosition[Z_AXIS] < zMin+15) moveToReal(xMin-ENDSTOP_X_BACK_ON_HOME,yMin-ENDSTOP_Y_BACK_ON_HOME,zMin+15,IGNORE_COORDINATE,homingFeedrate[0]);
         Commands::waitUntilEndOfAllMoves();
-       	//set starting position
-	moveToReal(CLEAN_X_START,CLEAN_Y_START,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-        //X-Axis Cleaning
 	//first step
-	moveToReal(CLEAN_X_START + CLEAN_X,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+	moveToReal(xMin-ENDSTOP_X_BACK_ON_HOME+CLEAN_X,yMin-ENDSTOP_Y_BACK_ON_HOME+CLEAN_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
 	//second step
-	moveToReal(CLEAN_X_START,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+	moveToReal(xMin-ENDSTOP_X_BACK_ON_HOME,yMin-ENDSTOP_Y_BACK_ON_HOME,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
 	//third step
-	moveToReal(CLEAN_X_START + CLEAN_X,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+	moveToReal(xMin-ENDSTOP_X_BACK_ON_HOME+CLEAN_X,yMin-ENDSTOP_Y_BACK_ON_HOME+CLEAN_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
 	//fourth step
-	moveToReal(CLEAN_X_START,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-
-        //Y-Axis Cleaning
-        //first step
-	moveToReal(IGNORE_COORDINATE,CLEAN_Y_START + CLEAN_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	//second step
-	moveToReal(IGNORE_COORDINATE,CLEAN_Y_START,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	//third step
-	moveToReal(IGNORE_COORDINATE,CLEAN_Y_START + CLEAN_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	//fourth step
-	moveToReal(IGNORE_COORDINATE,CLEAN_Y_START,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-
-	#if NUM_EXTRUDER==2
-        // Move Y-Axis for Anti-Collision
-        moveToReal(IGNORE_COORDINATE,CLEAN_Y_CLEARANCE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-       	//set starting position
-	moveToReal(CLEAN2_X_START,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	moveToReal(IGNORE_COORDINATE,CLEAN2_Y_START,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+	moveToReal(xMin-ENDSTOP_X_BACK_ON_HOME,yMin-ENDSTOP_Y_BACK_ON_HOME,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+	#if NUM_EXTRUDER == 2
+	//move out to be sure first drop go to purge box
+        moveToReal(xMin+xLength-2,yMin+CLEAN_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+        moveToReal(xMin+xLength-2,yMin-ENDSTOP_Y_BACK_ON_HOME,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
         Commands::waitUntilEndOfAllMoves();
-        //X-Axis Cleaning
         //first step
-        moveToReal(CLEAN2_X_START + CLEAN2_X,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+        moveToReal(xMin+xLength-20,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
         //second step
-        moveToReal(CLEAN2_X_START,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+        moveToReal(xMin+xLength,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
         //third step
-        moveToReal(CLEAN2_X_START + CLEAN2_X,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+        moveToReal(xMin+xLength-20,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
          //fourth step
-        moveToReal(CLEAN2_X_START,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-        
-        //Y-Axis Cleaning
-        //first step
-	moveToReal(IGNORE_COORDINATE,CLEAN2_Y_START + CLEAN2_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	//second step
-	moveToReal(IGNORE_COORDINATE,CLEAN2_Y_START,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	//third step
-	moveToReal(IGNORE_COORDINATE,CLEAN2_Y_START + CLEAN2_Y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	//fourth step
-	moveToReal(IGNORE_COORDINATE,CLEAN2_Y_START,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-        // Move Y-Axis for Anti-Collision
-        moveToReal(IGNORE_COORDINATE,CLEAN_Y_CLEARANCE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+        moveToReal(xMin+xLength,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
 	#endif
         Commands::waitUntilEndOfAllMoves();
-        //back to original position and original extruder
+	//back to original position and original extruder
         //X,Y first then Z
-	moveToReal(tmp_x,IGNORE_COORDINATE,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	moveToReal(IGNORE_COORDINATE,tmp_y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
-	moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,tmp_z,IGNORE_COORDINATE,homingFeedrate[0]);
-        Commands::waitUntilEndOfAllMoves();
-	Extruder::selectExtruderById(tmp_extruderid);
-	}
+	if (restoreposition)
+                {
+		moveToReal(tmp_x,tmp_y,IGNORE_COORDINATE,IGNORE_COORDINATE,homingFeedrate[0]);
+		moveToReal(IGNORE_COORDINATE,IGNORE_COORDINATE,tmp_z,IGNORE_COORDINATE,homingFeedrate[0]);
+		Commands::waitUntilEndOfAllMoves();
+		Extruder::selectExtruderById(tmp_extruderid);
+                }
+        }
 #endif
 
 void Printer::constrainDestinationCoords()
@@ -584,7 +558,7 @@ void Printer::setup()
 {
     HAL::stopWatchdog();
 #if FEATURE_CONTROLLER==5
-    HAL::delayMilliseconds(100);
+    HAL::delayMilliseconds(200); // default 100
 #endif // FEATURE_CONTROLLER
     //HAL::delayMilliseconds(500);  // add a delay at startup to give hardware time for initalization
     HAL::hwSetup();
@@ -819,7 +793,7 @@ void Printer::setup()
 #endif
 #if CASE_LIGHTS_PIN>=0
     SET_OUTPUT(CASE_LIGHTS_PIN);
-    WRITE(CASE_LIGHTS_PIN, CASE_LIGHT_DEFAULT_ON);
+    WRITE(CASE_LIGHTS_PIN, buselight);
 #endif // CASE_LIGHTS_PIN
 #ifdef XY_GANTRY
     Printer::motorX = 0;

@@ -159,17 +159,13 @@
 #define UI_ACTION_ZPOSITION_FAST_NOTEST 1110
 #define UI_ACTION_Z_BABYSTEPS           1111
 #define UI_ACTION_MAX_INACTIVE          1112
-#if SIMPLE_MENU == 1
-#define UI_ACTION_CLEAN_EXTR            1113
-#define UI_ACTION_CLEAN_DRIPTRAY        1114
-#define UI_ACTION_LOAD                  1115
-#define UI_ACTION_LOAD_READY            1116
-#define UI_ACTION_LOAD_RUN              1117
-#define UI_ACTION_UNLOAD                1118
-#define UI_ACTION_UNLOAD_RUN            1119
-#endif
-#define UI_ACTION_TOGGLE_POWERSAVE	1120
-#define UI_ACTION_CLEAN_NOZZLE          1121
+#define UI_ACTION_CLEAN_DRIPTRAY        1113
+#define UI_ACTION_LOAD_FILAMENT         1114
+#define UI_ACTION_UNLOAD_FILAMENT       1115
+#define UI_ACTION_TOGGLE_POWERSAVE      1116
+#define UI_ACTION_CLEAN_NOZZLE          1117
+#define UI_ACTION_AUTOLEVEL             1118
+#define UI_ACTION_SOUND                 1119
 
 #define UI_ACTION_MENU_XPOS             4000
 #define UI_ACTION_MENU_YPOS             4001
@@ -211,6 +207,15 @@ typedef struct {
   uint8_t nofilter; // Hide if one of these bits are set
   bool showEntry() const;
 } const UIMenuEntry;
+
+//structure to store the 4 lines of the screen for dialog 
+typedef struct {
+ char *textline1; // Menu text line 1
+ char *textline2; // Menu text line 2
+ char *textline3; // Menu text line 3
+ char *textline4; // Menu text line 4
+} UIPageDialogst;
+
 
 typedef struct {
   // 0 = info page
@@ -399,6 +404,7 @@ class UIDisplay {
     void refreshPage();
     void executeAction(int action);
     void finishAction(int action);
+    bool confirmationDialog(char * title,char * line1,char * line2);
     void slowAction();
     void fastAction();
     void mediumAction();

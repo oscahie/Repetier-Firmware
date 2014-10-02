@@ -49,7 +49,7 @@
 #if DAVINCI==1
 #define NUM_EXTRUDER 1
 #define EXT0_INVERSE 0
-#define X_MAX_LENGTH 235
+#define X_MAX_LENGTH 235 - ENDSTOP_X_BACK_ON_HOME
 #define UI_PRINTER_NAME    "  Da Vinci 1.0"
 #define UI_PRINTER_COMPANY "  XYZ Printing"
 #endif
@@ -57,7 +57,7 @@
 #if DAVINCI==2
 #define NUM_EXTRUDER 2
 #define EXT0_INVERSE 1
-#define X_MAX_LENGTH 199
+#define X_MAX_LENGTH 199 - ENDSTOP_X_BACK_ON_HOME
 #define EXT1_EXTRUDER_COOLER_PIN ORIG_FAN_PIN
 #define UI_PRINTER_NAME    "  Da Vinci 2.0"
 #define UI_PRINTER_COMPANY "  XYZ Printing"
@@ -66,7 +66,7 @@
 #if DAVINCI==3
 #define NUM_EXTRUDER 2
 #define EXT0_INVERSE 1
-#define X_MAX_LENGTH 199
+#define X_MAX_LENGTH 199 - ENDSTOP_X_BACK_ON_HOME
 #define EXT1_EXTRUDER_COOLER_PIN ORIG_FAN2_PIN
 #define UI_PRINTER_NAME    "  Da Vinci 2.0"
 #define UI_PRINTER_COMPANY "  XYZ Printing"
@@ -228,7 +228,7 @@
 #define ENDSTOP_Y_RETEST_REDUCTION_FACTOR 3
 #define ENDSTOP_Z_RETEST_REDUCTION_FACTOR 4
 #define ENDSTOP_X_BACK_ON_HOME 0
-#define ENDSTOP_Y_BACK_ON_HOME 0
+#define ENDSTOP_Y_BACK_ON_HOME 7
 #define ENDSTOP_Z_BACK_ON_HOME 0
 #define ALWAYS_CHECK_ENDSTOPS 1
 
@@ -250,9 +250,9 @@
 //#define X_MAX_LENGTH 235
 #define Y_MAX_LENGTH 217
 #define Z_MAX_LENGTH 202
-#define X_MIN_POS -30
-#define Y_MIN_POS -15
-#define Z_MIN_POS 0
+#define X_MIN_POS -30 + ENDSTOP_X_BACK_ON_HOME
+#define Y_MIN_POS -15 + ENDSTOP_Y_BACK_ON_HOME
+#define Z_MIN_POS 0 + ENDSTOP_Z_BACK_ON_HOME
 
 // ##########################################################################################
 // ##                           Movement settings                                          ##
@@ -346,7 +346,7 @@ is always running and is not hung up for some unknown reason.
 IMPORTANT: The ARM processors need a special board definition to work properly. 
 See: AdditionalArduinoFiles: README.txt on how to install them. 
 */
-#define FEATURE_WATCHDOG 1
+#define FEATURE_WATCHDOG 0
 
 // #################### Z-Probing #####################
 
@@ -359,10 +359,10 @@ See: AdditionalArduinoFiles: README.txt on how to install them.
 #define Z_PROBE_Y_OFFSET 0
 #define Z_PROBE_WAIT_BEFORE_TEST 0
 #define Z_PROBE_SPEED 1
-#define Z_PROBE_XY_SPEED 100
+#define Z_PROBE_XY_SPEED 80
 #define Z_PROBE_SWITCHING_DISTANCE 1
 #define Z_PROBE_REPETITIONS 1
-#define Z_PROBE_HEIGHT 0.28
+#define Z_PROBE_HEIGHT 0.3
 #define Z_PROBE_START_SCRIPT ""
 #define Z_PROBE_FINISHED_SCRIPT ""
 #define FEATURE_AUTOLEVEL 1
@@ -391,29 +391,18 @@ See: AdditionalArduinoFiles: README.txt on how to install them.
 #define UI_DISABLE_AUTO_PAGESWITCH 1
 #define UI_AUTORETURN_TO_MENU_AFTER 30000
 #define UI_AUTOLIGHTOFF_AFTER 1
+
 #define ENABLE_CLEAN_NOZZLE 1
 #if ENABLE_CLEAN_NOZZLE
-    // Set Starting Position for 1st Cleaning (Position of nozzle before the clean starts)
-    #define CLEAN_X_START -30
-    #define CLEAN_Y_START -15
-    // Distance to move to for cleaning the 1st extruder.
-    #if DAVINCI==1     // Da Vinci 1.0
+  #if DAVINCI==1 //cleaner of Davinci 1.0 is not in same position of 2.0
     #define CLEAN_X 20
-    #define CLEAN_Y 20
-    #else              // Da Vinci 2.0
+    #define CLEAN_Y 0
+ #else
     #define CLEAN_X 0
     #define CLEAN_Y 30
-    #endif
-    // Set Starting Position for 2nd Cleaning (Position of nozzle before the clean starts)
-    #define CLEAN2_X_START 167
-    #define CLEAN2_Y_START -15
-    // Distance to move to for cleaning the 2nd extruder.
-    #define CLEAN2_X -30
-    #define CLEAN2_Y 0
-    // On some printers with dual extruders, the Y-Axis can collide when moving to clean the 2nd extruder
-    // Here you can specify how much clearance is needed to avoid the collision.
-    #define CLEAN_Y_CLEARANCE 15
 #endif
+#endif
+
 #define FEATURE_UI_KEYS 0
 #define UI_ENCODER_SPEED 1
 #define UI_KEY_BOUNCETIME 10
@@ -423,7 +412,7 @@ See: AdditionalArduinoFiles: README.txt on how to install them.
 #define FEATURE_BEEPER 1
 #define CASE_LIGHTS_PIN 85
 #define CASE_LIGHT_DEFAULT_ON 1
-#define UI_START_SCREEN_DELAY 4000
+#define UI_START_SCREEN_DELAY 2000
 /**
 Beeper sound definitions for short beeps during key actions
 and longer beeps for important actions.
@@ -442,13 +431,5 @@ Values must be in range 1..255
 #define UI_SET_MAX_EXTRUDER_TEMP   240
 #define UI_SET_EXTRUDER_FEEDRATE 2
 #define UI_SET_EXTRUDER_RETRACT_DISTANCE 3
-
-/**
-UI_AUTORETURN_TO_MENU_AFTER must be disabled when using Simple Menu 
-to avoid conflicts with the new menu system.
-*/
-#if SIMPLE_MENU == 1
-#define UI_AUTORETURN_TO_MENU_AFTER 0
-#endif
 
 #endif
