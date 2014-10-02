@@ -1161,7 +1161,7 @@ void Commands::executeGCode(GCode *com)
         HAL::forbidInterrupts();
         while(1) {} // Endless loop
 #else
-        Com::printInfoFLN(PSTR("Watchdog feature was not compiled into this version!"))
+        Com::printInfoFLN(PSTR("Watchdog feature was not compiled into this version!"));
 #endif
         break;
 

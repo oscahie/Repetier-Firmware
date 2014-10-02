@@ -132,7 +132,7 @@ typedef char prog_char;
 #define PULLUP(IO,v)            {pinMode(IO, (v!=LOW ? INPUT_PULLUP : INPUT)); }
 
 // INTERVAL / (32Khz/128)  = seconds
-#define WATCHDOG_INTERVAL       512u  // 2sec  (~16 seconds max)
+#define WATCHDOG_INTERVAL       250  // 1 sec  (~16 seconds max)
 
 
 
@@ -603,9 +603,9 @@ public:
 
 
     // Watchdog support
-    inline static void startWatchdog() {  WDT->WDT_MR = WDT_MR_WDRSTEN | WATCHDOG_INTERVAL | (WATCHDOG_INTERVAL << 16);WDT->WDT_CR = 0xA5000001;};
+    inline static void startWatchdog() { WDT_Enable(WDT, WDT_MR_WDRSTEN | WATCHDOG_INTERVAL );};
     inline static void stopWatchdog() {}
-    inline static void pingWatchdog() {WDT->WDT_CR = 0xA5000001;};
+    inline static void pingWatchdog() {WDT_Restart(WDT);};
 
     inline static float maxExtruderTimerFrequency() {return (float)F_CPU/TIMER0_PRESCALE;}
 #if FEATURE_SERVO
