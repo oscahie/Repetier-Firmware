@@ -2782,6 +2782,7 @@ void UIDisplay::executeAction(int action)
 			Printer::buselight=true;
 			else
 			Printer::buselight=false;
+            EEPROM::storeDataIntoEEPROM(false);
             UI_STATUS(UI_TEXT_LIGHTS_ONOFF);
             break;
 #endif

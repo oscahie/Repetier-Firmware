@@ -558,7 +558,7 @@ void Printer::setup()
 {
     HAL::stopWatchdog();
 #if FEATURE_CONTROLLER==5
-    HAL::delayMilliseconds(100);
+    HAL::delayMilliseconds(200); // default 100
 #endif // FEATURE_CONTROLLER
     //HAL::delayMilliseconds(500);  // add a delay at startup to give hardware time for initalization
     HAL::hwSetup();
